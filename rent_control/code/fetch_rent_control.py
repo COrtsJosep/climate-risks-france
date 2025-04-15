@@ -6,8 +6,7 @@ from pathlib import Path
 code_dir = Path(__file__).parent
 data_dir = code_dir.parent / 'data'
 
-### 3. DATA DOWNLOADS
-## URL can be found by scanning the API requests (inspect page -> network) launched when using http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris/
+### 3. CONSTANTS
 CITY = ['paris', 'plaine-commune', 'est-ensemble']
 PERIOD = {
     'paris': ['2015-08-01', '2016-08-01', '2017-08-01', '2019-07-01', '2020-07-01', '2021-07-01', '2022-07-01', '2023-07-01', '2024-07-01'],
@@ -23,6 +22,8 @@ ROOMS = ['_' + str(i) for i in range(1, 5)]
 EPOQUE = ['_inf1946', '_1946-1970', '_1971-1990', '_sup1990']
 FURNISHED = ['_meuble', '_non-meuble']
 
+### 4. DATA DOWNLOADS
+## URL can be found by scanning the API requests (inspect page -> network) launched when using http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris/
 for city in CITY:
     for period in PERIOD[city]:
         for housing_type in HOUSING_TYPE[city]:
@@ -30,7 +31,7 @@ for city in CITY:
                 for epoque in EPOQUE:
                     for furnished in FURNISHED:   
                         url = f'http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/{city}/kml/{period}/drihl_medianes{housing_type}{rooms}{epoque}{furnished}.kml'
-                        destination = data_dir / 'geoshapes' / city / period / f'{housing_type}{rooms}{epoque}{furnished}.geojson'[1:] # ignore leading underscore
+                        destination = data_dir / 'rent_control_geoshapes' / city / period / f'{housing_type}{rooms}{epoque}{furnished}.geojson'[1:] # ignore leading underscore
                         
                         print('Fetching', url)
                         
