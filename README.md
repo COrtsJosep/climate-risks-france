@@ -17,13 +17,13 @@ The objective of this section is being able to tell how vulnerable a housing uni
 
 ### Code
 Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
-- _fetch_heatstress_data.py_: Downloads all of the datasets mentioned in the section above.
+- _fetch_heatstress_data.py_: Downloads all of the datasets mentioned in the [Data Sources](#data-sources) Section above.
 - _conseils_de_quartier_heatstress.py_: Calculates the average heatstress at a _Conseil de Quartier_ level. Generates _conseils_de_quartier_heatstress.csv_
 - _code_postal_heatstress.py_: Calculates the average heatstress at a _Code Postal_ level. Generates  _code_postal_heatstress.csv_
 
 ### Spatial Merges
 #### _IMU_ - _Conseil de Quartier_
-Relatively simple, since we have the polygons of both of them. Simply calculate, for each _Conseil de Quartier_, with how many _IMUs_ there is overlap, and do the average (see next section).
+Relatively simple, since we have the polygons of both of them. Simply calculate, for each _Conseil de Quartier_, with how many _IMUs_ there is overlap, and do the average (see the [Averaging](#averaging) Section).
 
 #### _IMU_ - _Code Postal_
 Quite challenging, since there not seems to exist any repository with the polygon areas of the _Codes Postaux_ (see [this post](https://www.r-bloggers.com/2024/11/codes-postaux/) and [this article](https://vivreparis.fr/pourquoi-le-16e-arrondissement-possede-t-il-deux-codes-postaux/) for some insights). What we do, as a best-possible approach, is to try to map _Communes_ to _Codes Postaux_, stemming from the realization that in most cases, either they map one-to-one, or a _Code Postal_ encompasses __exactly__ many _Communes_. To generate the polygons at the _Commune_, we start from the _IRIS_ polygons, and just melt together the polygons at the _Commune_ level. This is possible because _IRIS_ are an exact subdivision of _Communes_. Now comes the crucial step: 
@@ -32,7 +32,7 @@ Quite challenging, since there not seems to exist any repository with the polygo
 - If a _Commune_ contains __exactly__ multiple _Codes Postaux_ (happens in around 8 cases), all of the _Codes Postaux_ get assigned the polygon of the _Commune_.
 - Finally, some _Codes Postaux_ contain multiple _Communes_ (happens in 3 cases), which in turn contain multiple _Codes Postaux_. Here, the polygon of the _Code Postal_ will be the melted union of the polygons of the _Communes_ where the _Code Postal_ is present. For instance: the _Code Posal_ 95710 corresponds to the _Communes_ 95101, 95150, and 95011, but inside the _Commune_ 95011 there are two _Codes Postaux_: 95710 and 95420. In that case, the _Code Postal_ 95710 gets assigned the melted polygons of 95101, 95150, and 95011; and the _Code Postal_ 95420 gets assigned the polygon of 95011. As a result, the polygons of both _Codes Postaux_ will partly overlap.
 
-We obtain as a result a reasonable polygon for each _Code Postal_. Lastly, we calculate the average (see next section) of the heatstress variables.
+We obtain as a result a reasonable polygon for each _Code Postal_. Lastly, we calculate the average (see the [Averaging](#averaging) Section) of the heatstress variables.
 
 ### Averaging
 Given a set of _IMUs_ $IMU_1, IMU_2, ..., IMU_N$ with corresponding heatstress values $x_1, x_2, ..., x_N$, the weighted average of $x$ for a polygon $P$ is defined as\
@@ -59,7 +59,7 @@ The objective of this section is matching the rent control data published by the
 
 ### Code
 Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
-- _fetch_rent_control_data.py_: Downloads all of the datasets mentioned in the section above.
+- _fetch_rent_control_data.py_: Downloads all of the datasets mentioned in the [Data Sources](#data-sources-1) Section above.
 - _conseils_de_quartier_rent_control.py_: Calculates the average rent control prices at a _Conseil de Quartier_ level. Generates _conseils_de_quartier_rent_control.csv_, as well as _conseils_de_quartier_zone_overlap.csv_
 - _code_postal_rent_control.py_: Calculates the average rent control prices at a _Code Postal_ level. Generates  _code_postal_rent_control.csv_, as well as _code_postal_zone_overlap.csv_
 
@@ -67,7 +67,7 @@ Each _.py_ file does one thing, and is named accordingly. If you have doubts abo
 The rent control area units are the 80 _Quartiers Administratifs_ (see the [official map](https://opendata.paris.fr/explore/dataset/quartier_paris/map/?disjunctive.c_ar&sort=c_qu&location=12,48.88786,2.35176&basemap=jawg.streets) from the Paris City Council), a subdivision of _Grand Quartiers_. The _Quartiers Administratifs_ are joined in 14 _Zones_ that share the same rent control levels. _Quartiers Administratifs_ in a same _Zone_ are not necessarily contiguous. 
 
 #### _Zone_ - _Conseil de Quartier_
-For around 70% of the 114 _Conseils de Quartier_, 90% of the area of the _Conseil de Quartier_ is inside a single _Zone_. For all but one, more than 50% of its area is inside a single _Zone_. The merge is relatively simple, since we have the polygons of both of them. Simply calculate, for each _Conseil de Quartier_, with how many _Zones_ there is overlap, and do the average (see the [Averaging](#averaging) Section).
+For around 70% of the 114 _Conseils de Quartier_, 90% of the area of the _Conseil de Quartier_ is inside a single _Zone_. For all but one, more than 50% of its area is inside a single _Zone_. The merge is relatively simple, since we have the polygons of both of them. Simply calculate, for each _Conseil de Quartier_, with how many _Zones_ there is overlap, and do the average (see the [Averaging](#averaging-1) Section).
 
 #### _Zone_ - _Code Postal_
 Out of the 21 _Codes Postaux_ of Paris, only 2 have more than 90% of their area inside a single _Zone_, so the match quality is lower than with _Conseils de Quartier_. Similarly, we calculate overlaps and average.
