@@ -16,7 +16,7 @@ conseils_de_quartier_geoshapes_path = data_dir / 'conseils_de_quartier_geoshapes
 ### 3. DATA IMPORTS
 print('Loading Heat Stress geotable...')
 gdf_hs = gpd.read_file(heatstress_geoshapes_path) # hs: heatstress
-gdf_hs = gdf_hs.to_crs("EPSG:4326") # set same coordinate system as the other gdf
+gdf_hs = gdf_hs.to_crs('EPSG:4326') # set same coordinate system as the other gdf
 gdf_hs.loc[:, 'geometry'] = gdf_hs.force_2d() # flatten geometries to 2D
 
 print('Loading Conseils de Quartier geotable...')

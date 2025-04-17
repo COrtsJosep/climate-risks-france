@@ -135,4 +135,5 @@ gdf_cp.join(df_wa).explore('vulnn_note').save(figures_dir / 'vulnn_note_map_per_
     
 ### 7. DATA EXPORTS
 print('Exporting data...')
+gdf_cp.loc[:, 'geometry'].to_file(data_dir / 'code_postal_geoshapes.geojson', driver = 'GeoJSON')
 df_wa.to_csv(data_dir / 'code_postal_heatstress.csv')

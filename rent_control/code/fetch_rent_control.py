@@ -1,10 +1,12 @@
 ### 1. MODULE IMPORTS
+import shutil
 import geopandas as gpd
 from pathlib import Path
 
 ### 2. PATH DEFINITIONS
 code_dir = Path(__file__).parent
 data_dir = code_dir.parent / 'data'
+heatstress_data_dir = Path(str(data_dir).replace('rent_control', 'heatstress'))
 
 ### 3. CONSTANTS
 CITY = ['paris', 'plaine-commune', 'est-ensemble']
@@ -23,6 +25,7 @@ EPOQUE = ['_inf1946', '_1946-1970', '_1971-1990', '_sup1990']
 FURNISHED = ['_meuble', '_non-meuble']
 
 ### 4. DATA DOWNLOADS
+## Rent control data and geoshapes
 ## URL can be found by scanning the API requests (inspect page -> network) launched when using http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris/
 for city in CITY:
     for period in PERIOD[city]:
@@ -37,3 +40,15 @@ for city in CITY:
                         
                         destination.parent.mkdir(parents = True, exist_ok = True) # create directory
                         gpd.read_file(url).to_file(destination, driver = 'GeoJSON')
+                        
+## Postal code geoshapes (created by a /heatstress script)
+shutil.copy(
+    heatstress_data_dir / 'code_postal_geoshapes.geojson',
+    data_dir / 'code_postal_geoshapes.geojson'
+)
+
+## Conseil de Quartier geoshapes (created by a /heatstress script)
+shutil.copy(
+    heatstress_data_dir / 'conseils_de_quartier_geoshapes.zip',
+    data_dir / 'conseils_de_quartier_geoshapes.zip'
+)
