@@ -96,6 +96,6 @@ The numeric variables, all of them expressed as €/m², are:
 ### Results
 The resulting files are _conseils_de_quartier_rent_control.csv_ and _code_postal_rent_control.csv_. Additionally, the files _conseils_de_quartier_zone_overlap.csv_ and _code_postal_zone_overlap.csv_ show the % of area of each unit inside the _Zone_ with highest overlap.
 
-![Benchmark rent by Conseil de Quartier](./rent_control/figures/rc_cq.png)
+![Benchmark rent by Conseil de Quartier](./rent_control/figures/cq_rc.png)
 
 A quick visualization shows that central areas in Paris have a higher reference rent than the periphery.
