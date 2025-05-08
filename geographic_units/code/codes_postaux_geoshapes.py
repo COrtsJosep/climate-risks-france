@@ -1,27 +1,15 @@
 ### 1. MODULE IMPORTS
 import zipfile
+import pandas as pd
 import urllib.request
+import geopandas as gpd
 from pathlib import Path
 
 ### 2. PATH DEFINITIONS
 code_dir = Path(__file__).parent
 data_dir = code_dir.parent / 'data'
 
-### 3. DATA DOWNLOADS
-## Heatstress geoshapes
-# zip URL from https://data-iau-idf.opendata.arcgis.com/datasets/iau-idf::ilots-de-chaleur-urbains-icu-classification-des-imu-en-zone-climatique-locale-lcz-al%C3%A9as-et-vuln%C3%A9rabilit%C3%A9s-%C3%A0-la-chaleur-de-jour-et-de-nuit-en-%C3%AEle-de-france/about
-heatstress_zip_url = 'https://hub.arcgis.com/api/v3/datasets/2846134ea6b94177af1366d11e517187_18/downloads/data?format=shp&spatialRefId=2154&where=1%3D1'
-heatstress_zip_destination = data_dir / 'heatstress_geoshapes.zip'
-print('Retrieving the Heat Stress ZIP file...')
-urllib.request.urlretrieve(heatstress_zip_url, heatstress_zip_destination)
-
-## Conseils de Quartier geoshapes
-# zip url from https://www.data.gouv.fr/fr/datasets/les-conseils-de-quartier-par-arrondissement-prs/
-conseils_zip_url = 'https://opendata.paris.fr/explore/dataset/conseils-quartiers/download?format=shp'
-conseils_zip_destination = data_dir / 'conseils_de_quartier_geoshapes.zip'
-print('Retrieving the Conseils de Quartier ZIP file...')
-urllib.request.urlretrieve(conseils_zip_url, conseils_zip_destination)
-
+### 3. DONWLOADS
 ## IRIS - Commune crosswalk
 # zip url from https://www.insee.fr/fr/information/7708995#
 iris_zip_url = 'https://www.insee.fr/fr/statistiques/fichier/7708995/reference_IRIS_geo2024.zip'
@@ -51,3 +39,52 @@ try:
     urllib.request.urlretrieve(iris_7z_url, iris_7z_destination) 
 except:
     print('Failed with 403 error. Why would géoservices do that? Anyways, I will download the files by hand and save them in iris_geoshapes.zip ...')
+    
+### 4. GEOSHAPE CREATION
+print('\n\nLoading IRIS geotable...')
+gdf_ir = ( # ir: IRIS
+    gpd
+    .read_file(data_dir / 'iris_geoshapes.zip')
+    .loc[:, ['CODE_IRIS', 'geometry']]
+    .set_index('CODE_IRIS')
+)
+
+print('Loading IRIS - Commune crosswalk...')
+df_ic = ( # ic: IRIS - Commune
+    pd
+    .read_excel(
+        data_dir / 'iris_commune_crosswalk.xlsx',
+        sheet_name = 'Emboitements_IRIS',
+        header = 5, # table starts on the 6th row
+    )
+    .query('REG == 11') # only region 11 (Île-de-France)
+    .loc[:, ['CODE_IRIS', 'DEPCOM']]
+    .set_index('CODE_IRIS')
+)
+
+print('Loading Commune - Code Postal crosswalk...')
+df_cc = ( # cc: Commune - Code Postal
+    pd
+    .read_csv(
+        data_dir / 'commune_code_postal_crosswalk.csv', 
+        usecols = ['code_commune_insee', 'code_postal'],
+        dtype = str
+    )
+    .drop_duplicates()
+    .reset_index(drop = True)
+    .rename(columns = {'code_commune_insee': 'DEPCOM', 'code_postal': 'CP'})
+)
+df_cc.loc[df_cc.loc[:, 'CP'] == '93380', 'DEPCOM'] = '93059' # There is one error on Pierrefite-sur-Seine
+
+### 5. JOIN AND EXPORT
+print('Joining tables...')
+(
+    gdf_ir
+    .join(df_ic, how = 'inner', sort = True)
+    .merge(df_cc, how = 'left', on = 'DEPCOM')
+    .dropna(subset = 'CP')
+    .dissolve(by = 'CP')
+    .loc[:, 'geometry']
+    .rename_axis('code_postal')
+    .to_file(data_dir / 'codes_postaux_geoshapes.geojson')
+)

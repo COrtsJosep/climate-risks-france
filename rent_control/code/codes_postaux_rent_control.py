@@ -1,6 +1,4 @@
 ### 1. PATH DEFINITIONS
-import numpy as np
-import tabula
 import pandas as pd
 import geopandas as gpd
 from pathlib import Path
@@ -9,6 +7,7 @@ from pathlib import Path
 code_dir = Path(__file__).parent
 data_dir = code_dir.parent / 'data'
 figures_dir = code_dir.parent / 'figures'
+geoshapes_dir = code_dir.parent.parent / 'geographic_units' / 'data'
 
 ### 3. CONSTANTS
 cols = [
@@ -89,8 +88,8 @@ gdf_rc = ( # rc: rent control
     )
 )
 
-### 5. JOIN WITH CONSEILS DE QUARTIER
-gdf_cp = gpd.read_file(data_dir / 'code_postal_geoshapes.geojson').set_index('CP').to_crs('EPSG:4326') # cp: code postal
+### 5. JOIN WITH CODES POSTAUX
+gdf_cp = gpd.read_file(geoshapes_dir / 'codes_postaux_geoshapes.geojson').set_index('code_postal').to_crs('EPSG:4326') # cp: code postal
 gdf_cp_pr = gdf_cp.loc[gdf_cp.index.isin(CP_PARIS)] # pr: paris
 
 gdf_zn = ( # zn: zone
@@ -135,24 +134,28 @@ for rooms in ROOMS:
             df_rc_pr.loc[:, 'rooms'] = rooms[1:]
             df_rc_pr.loc[:, 'epoque'] = epoque[1:]
             df_rc_pr.loc[:, 'furnished'] = furnished[1:]
-            df_rc_pr = df_rc_pr.rename_axis('cp')
+            df_rc_pr = df_rc_pr.rename_axis('code_postal')
             
             dfs_rc_pr.append(df_rc_pr)
 
 ### 6. EXPORTS
 (
     pd
-    .DataFrame(data = {'cp': gdf_cp_pr.index, 'zn': zns, 'frac_in_zn': frac_in_zns})
-    .set_index('cp')
+    .DataFrame(data = {'code_postal': gdf_cp_pr.index, 'zn': zns, 'frac_in_zn': frac_in_zns})
+    .set_index('code_postal')
     .sort_values(by = 'frac_in_zn')
-    .to_csv(data_dir / 'code_postal_zone_overlap.csv')
+    .to_csv(data_dir / 'codes_postaux_zone_overlap.csv')
 )
 
 (
     pd
     .concat(dfs_rc_pr) # concatenate all room, epoque, furnished combinations
     .reset_index()
-    .loc[:, ['cp', 'rooms', 'epoque', 'furnished'] + float_cols]
+    .loc[:, ['code_postal', 'rooms', 'epoque', 'furnished'] + float_cols]
     .dropna() # CP outside the Paris metropolitan area do not overlap with rent control zones, so they have missing values
-    .to_csv(data_dir / 'code_postal_rent_control.csv', index = False)
+    .to_csv(data_dir / 'codes_postaux_rent_control.csv', index = False)
 )
+
+gdf_map = gdf_cp.reset_index().merge(dfs_rc_pr[0], how = 'inner', on = 'code_postal')
+gdf_map['ref'] = gdf_map['ref'].astype(float)
+gdf_map.explore('ref', cmap = 'cool').save(figures_dir / 'rent_control_map_per_code_postal.html')

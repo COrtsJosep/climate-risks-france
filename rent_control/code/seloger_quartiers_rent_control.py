@@ -86,8 +86,8 @@ gdf_rc = ( # rc: rent control
     )
 )
 
-### 5. JOIN WITH CONSEILS DE QUARTIER
-gdf_cq = gpd.read_file(geoshapes_dir / 'conseils_de_quartier_geoshapes.geojson').set_index('conseil_de_quartier')
+### 5. JOIN WITH SELOGER QUARTIERS
+gdf_sl = gpd.read_file(geoshapes_dir / 'seloger_quartiers_geoshapes.geojson').set_index(['seloger_quartier', 'code_postal']) # sl: SeLoger
 
 gdf_zn = ( # zn: zone
     gdf_rc
@@ -99,24 +99,24 @@ gdf_zn = ( # zn: zone
 ## 5.1. SMALL EXERCISE TO SEE CORRESPONDANCE QUALITY
 zns = [] # zones (ID)
 frac_in_zns = [] # fraction of area of the Conseil de Quartier inside the zone
-for cq in gdf_cq.index:
-    cq_shape = gdf_cq.loc[cq, 'geometry']
+for sl in gdf_sl.index:
+    sl_shape = gdf_sl.loc[sl, 'geometry']
 
-    gdf_overlap = gdf_zn.assign(frac_in_zn = lambda df: df.loc[:, 'geometry'].apply(lambda zn_shape: zn_shape.intersection(cq_shape).area / cq_shape.area))
+    gdf_overlap = gdf_zn.assign(frac_in_zn = lambda df: df.loc[:, 'geometry'].apply(lambda zn_shape: zn_shape.intersection(sl_shape).area / sl_shape.area))
     zn_max_frac_in_zn = gdf_overlap.loc[:, 'frac_in_zn'].idxmax() # zone with maximum overlap
     max_frac_in_zn = gdf_overlap.loc[:, 'frac_in_zn'].max() # fraction of area in the zone with maximum overlap
     
     zns.append(zn_max_frac_in_zn)
     frac_in_zns.append(max_frac_in_zn)
-
-## 5.2. TRANSLATION OF RENT CONTROL BY ZONE TO BY CONSEIL DE QUARTIER
-overlaps = [] # each column corresponds to a CdQ, each row corresponds to the % of CdQ in each rent control zone 
-for cq in gdf_cq.index:
-    cq_shape = gdf_cq.loc[cq, 'geometry']
-    overlap = gdf_zn.loc[:, 'geometry'].apply(lambda zn_shape: zn_shape.intersection(cq_shape).area / cq_shape.area).rename(cq)
+    
+## 5.2. TRANSLATION OF RENT CONTROL BY ZONE TO BY CODE POSTAL
+overlaps = [] # each column corresponds to a SeLoger Quartier, each row corresponds to the % of SeLoger Quartier in each rent control zone 
+for sl in gdf_sl.index:
+    sl_shape = gdf_sl.loc[sl, 'geometry']
+    overlap = gdf_zn.loc[:, 'geometry'].apply(lambda zn_shape: zn_shape.intersection(sl_shape).area / sl_shape.area).rename(sl)
     overlaps.append(overlap)
     
-df_ol = pd.concat(overlaps, axis = 1) # ol: overlap. Is a (#CdQ x #Zones) matrix (after being transposed in the next line)
+df_ol = pd.concat(overlaps, axis = 1) # ol: overlap. Is a (#SeLoger Quartier x #Zones) matrix (after being transposed in the next line)
 
 df_ol_pr = (df_ol.loc[df_ol.index < 15] / df_ol.loc[df_ol.index < 15].sum()).T # pr: Paris. here I divide by the sum so that all weights add to 1
 gdf_rc_pr = gdf_rc.loc[(gdf_rc.loc[:, 'city'] == 'paris') & (gdf_rc.loc[:, 'period'] == '2024-07-01')] # filter for Paris and last rent control values 
@@ -131,27 +131,25 @@ for rooms in ROOMS:
             df_rc_pr.loc[:, 'rooms'] = rooms[1:]
             df_rc_pr.loc[:, 'epoque'] = epoque[1:]
             df_rc_pr.loc[:, 'furnished'] = furnished[1:]
-            df_rc_pr = df_rc_pr.rename_axis('conseil_de_quartier')
+            df_rc_pr = df_rc_pr.rename_axis(gdf_sl.index.names)
             
             dfs_rc_pr.append(df_rc_pr)
 
-### 6. EXPORTS AND PLOTS
+### 6. EXPORTS
 (
     pd
-    .DataFrame(data = {'conseil_de_quartier': gdf_cq.index, 'zn': zns, 'frac_in_zn': frac_in_zns})
-    .set_index('conseil_de_quartier')
+    .DataFrame(data = {'zn': zns, 'frac_in_zn': frac_in_zns}, index = gdf_sl.index)
     .sort_values(by = 'frac_in_zn')
-    .to_csv(data_dir / 'conseils_de_quartier_zone_overlap.csv')
+    .to_csv(data_dir / 'seloger_quartiers_zone_overlap.csv')
 )
 
 (
     pd
     .concat(dfs_rc_pr) # concatenate all room, epoque, furnished combinations
-    .reset_index()
-    .loc[:, ['conseil_de_quartier', 'rooms', 'epoque', 'furnished'] + float_cols]
-    .to_csv(data_dir / 'conseils_de_quartier_rent_control.csv', index = False)
+    .loc[:, ['rooms', 'epoque', 'furnished'] + float_cols]
+    .to_csv(data_dir / 'seloger_quartiers_rent_control.csv')
 )
 
-gdf_map = gdf_cq.reset_index().merge(dfs_rc_pr[0], how = 'inner', on = 'conseil_de_quartier')
+gdf_map = gdf_sl.reset_index().merge(dfs_rc_pr[0], how = 'inner', on = 'seloger_quartier')
 gdf_map['ref'] = gdf_map['ref'].astype(float)
-gdf_map.explore('ref', cmap = 'cool').save(figures_dir / 'rent_control_map_per_conseil_de_quartier.html')
+gdf_map.explore('ref', cmap = 'cool').save(figures_dir / 'rent_control_map_per_seloger_quartier.html')
