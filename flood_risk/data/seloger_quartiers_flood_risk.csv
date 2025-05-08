@@ -1,0 +1,131 @@
+seloger_quartier,code_postal,prop_at_flood_risk
+Les Halles,75001,0.061577041710053675
+Palais Royal,75001,0.26806556224608846
+Saint Germain l'Auxerrois,75001,0.3657421749595691
+Seine et Berges,75001,1.0
+Vendôme,75001,0.6848074015575044
+Montorgueil-Saint Denis,75002,0.0
+Sentier-Bonne Nouvelle,75002,0.0
+Vivienne-Gaillon,75002,0.17190131677687068
+Archives,75003,0.0
+Arts et Métiers,75003,0.0
+Enfants Rouges,75003,0.0
+Sainte Avoie,75003,0.016999711078539263
+Arsenal,75004,0.4057126707681879
+Saint Gervais,75004,0.5125599822354651
+Saint Merri,75004,0.3088551146444624
+Seine et Berges,75004,1.0
+Île Saint Louis,75004,0.9990219727661952
+Île de la Cité,75004,0.8060448529308082
+Jardin des Plantes,75005,0.5356822386801898
+Saint Victor,75005,0.36716114639400077
+Sorbonne,75005,0.14801416231963085
+Val de Grace,75005,0.0
+Monnaie,75006,0.5482027427551933
+Notre Dame des Champs,75006,0.0
+Odéon,75006,0.025799909939964737
+Rennes,75006,0.001722973720868388
+Saint Germain des Prés,75006,0.8441879492171448
+Saint Placide,75006,0.0
+Ecole Militaire,75007,0.0
+Gros Caillou,75007,0.467337687626371
+Invalides,75007,0.32703997304992616
+Saint Thomas d'Aquin,75007,0.3303519230975167
+Seine et Berges,75007,1.0
+Elysées-Madeleine,75008,0.46196970725607556
+Europe,75008,0.08999455812356899
+Hoche-Friedland,75008,0.0
+Mairie,75008,0.2437943366978089
+Parc Monceau,75008,0.04037126908187248
+Saint Philippe du Roule,75008,0.32642668464374763
+Triangle d'Or,75008,0.3795613888685598
+Clichy-Trinité,75009,0.03161372649150661
+Lafayette-Richer,75009,0.0343238029131815
+Lorette-Martyrs,75009,0.0
+Provence Opéra,75009,0.5838309845325086
+Trudaine-Maubeuge,75009,0.0
+Chateau d'Eau-Lancry,75010,0.0
+Faubourg du Temple-Hôpital Saint Louis,75010,0.0
+Grange Aux Belles-Terrage,75010,0.0
+Louis Blanc-Aqueduc,75010,0.0
+Porte Saint Denis-Paradis,75010,0.0
+Saint Vincent de Paul-Lariboisière,75010,0.0
+Bastille-Popincourt,75011,0.6954181271116171
+Belleville-Saint Maur,75011,0.0
+Léon-Blum Folie-Regnault,75011,0.009605947275146163
+Nation-Alexandre Dumas,75011,0.03169126657279988
+République-Saint Ambroise,75011,0.0
+Aligre-Gare de Lyon,75012,0.7404135608095621
+Bel-Air Nord,75012,0.0
+Bel-Air Sud,75012,0.0
+Bercy,75012,0.5530924112184873
+Bois de Vincennes,75012,0.036680009822623434
+Jardin de Reuilly,75012,0.3401432576326769
+Nation-Picpus,75012,0.0006959689511222251
+Seine et Berges,75012,1.0
+Vallée de Fécamp,75012,0.006188895226121045
+Bièvres Sud Tolbiac,75013,0.0
+Buttes Aux Cailles-Glacière,75013,0.0
+Croulebarbe,75013,0.0
+Dunois-Bibliothèque-Jeanne-d'Arc,75013,0.4748014627022174
+Nationale-Deux Moulins,75013,0.0
+Olympiades-Choisy,75013,0.0
+Patay-Masséna,75013,0.46719250322363637
+Salpêtrière-Austerlitz,75013,0.20524577550114353
+Didot-Porte de Vanves,75014,0.0
+Jean Moulin-Porte d'Orléans,75014,0.0
+Montsouris Dareau,75014,0.0
+Mouton Duvernet,75014,0.0
+Pernety,75014,0.0
+Raspail-Montparnasse,75014,0.0
+Alleray Procession,75015,0.0
+Cambronne-Garibaldi,75015,0.005032451366208386
+Citroën-Boucicaut,75015,0.8076653797941642
+Dupleix-Motte Picquet,75015,0.6730821517787454
+Emeriau-Zola,75015,0.9245541369045819
+Georges Brassens,75015,0.0
+Pasteur Montparnasse,75015,0.0
+Saint Lambert,75015,0.4532709363386177
+Seine et Berges,75015,1.0
+Vaugirard-Parc des Expositions,75015,0.4882028383579923
+Violet Commerce,75015,0.8907670277770648
+Auteuil Nord,75016,0.35601518327108445
+Auteuil Sud,75016,0.25148908111284857
+Bois de Boulogne,75016,0.07973119139005218
+Chaillot,75016,0.20605980993133108
+Muette Nord,75016,0.07404503889964058
+Muette Sud,75016,0.2815375005937467
+Porte Dauphine,75016,0.0
+Batignolles-Cardinet,75017,0.0
+Champerret-Berthier,75017,0.015976336473013237
+Clichy-Batignolles,75017,0.03305353865856851
+Courcelles-Wagram,75017,0.0
+Epinettes-Bessières,75017,0.004921942510143108
+La Fourche-Guy Môquet,75017,0.0
+Legendre-Lévis,75017,0.0
+Pereire-Malesherbes,75017,0.09010085382981244
+Ternes-Maillot,75017,0.0
+Amiraux-Simplon-Poissonniers,75018,0.0
+Charles-Hermite-Evangile,75018,0.0
+Clignancourt-Jules Joffrin,75018,0.0
+Goutte d'Or-Château Rouge,75018,0.0
+Grandes Carrières-Clichy,75018,0.0
+La Chapelle-Marx Dormoy,75018,0.0
+Montmartre,75018,0.0
+Moskowa-Porte Montmartre-Porte de Clignancourt,75018,0.0
+Bas Belleville,75019,0.0
+Bassin de la Villette,75019,0.0
+Buttes Chaumont,75019,0.0
+Danube-Porte des Lilas,75019,0.0
+Flandre-Aubervilliers,75019,0.0
+Manin-Jaurès,75019,0.0
+Place des Fêtes,75019,0.0
+Pont de Flandre,75019,0.0
+Secrétan,75019,0.0
+Amandiers,75020,0.0
+Belleville,75020,0.0
+Gambetta,75020,0.0
+Plaine,75020,0.0
+Père Lachaise-Réunion,75020,0.0
+Saint Blaise,75020,0.0
+Télégraphe-Pelleport Saint Fargeau,75020,0.0
