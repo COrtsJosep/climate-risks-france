@@ -150,6 +150,6 @@ for rooms in ROOMS:
     .to_csv(data_dir / 'seloger_quartiers_rent_control.csv')
 )
 
-gdf_map = gdf_sl.reset_index().merge(dfs_rc_pr[0], how = 'inner', on = 'seloger_quartier')
+gdf_map = gdf_sl.reset_index().merge(dfs_rc_pr[0], how = 'inner', on = ['seloger_quartier', 'code_postal'])
 gdf_map['ref'] = gdf_map['ref'].astype(float)
 gdf_map.explore('ref', cmap = 'cool').save(figures_dir / 'rent_control_map_per_seloger_quartier.html')
