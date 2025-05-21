@@ -145,7 +145,7 @@ Each _.py_ file does one thing, and is named accordingly. If you have doubts abo
 
 ### Proportion Calculation
 The proportion of area with flood risk is calculated as the ratio of the area of the geographic unit (at the aforementioned three levels) minus those parts which are always underwater, that intersects with the areas with flood risk, with respect to the area of the geographic unit minus the areas always underwater. Let $P$ be the shape of a geographic unit, $A$ be the shape of all areas always underwater, and $R$ be the shape of all areas with high flood risk. The the proportion of flood risk area is $prop$ is defined as\
-  $$prop = \frac{|(P\\A)\cap R|}{|P\\A|}$$\
+  $$prop = \frac{|(P\setminus A)\cap R|}{|P\setminus A|}$$\
 
 ### Variables
 The only variable is _prop_at_flood_risk_, a real number between 0 and 1.
