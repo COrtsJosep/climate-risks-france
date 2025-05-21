@@ -5,6 +5,7 @@ This repository contains the code and data for my RAship work in the Parisian cl
 - [Geographic Units](#geographic-units)
 - [Heat Stress](#heat-stress)
 - [Rent Control](#rent-control)
+- [Flood Risk](#flood-risk)
 
 ## Geographic Units
 All analyses in this project are carried out at three geographic levels. From larger to smaller: _Code Postal_, _Conseil de Quartier_, and _SeLoger Quartier_. In this section you will find how the (multi)polygons for these geographic units are calculated. Note: I use the terms polygon, geoshape, shape and geometry indistinctively.
@@ -30,7 +31,7 @@ Each _.py_ file does one thing, and is named accordingly. If you have doubts abo
 Simple download. _Low-quality_ means that the polygons are very roughly defined, with too little points.
 
 #### _SeLoger Quartiers_
-The polygons are harvested by reading the API calls that the front-end makes when you move around the prix-de-l'immo map at a _Quartier_ level, and stored as a _txt_ file. The problem is, some _SeLoger_ quartiers do not have a unique name, and they can only be told appart based on the postal code. But that information is not in the API response, so the best way is to match them with the low-quality ones, which do contain the name and postal code, and that also match the information present in the advertisments.
+The polygons are harvested by reading the API calls that the front-end makes when you move around the prix-de-l'immo map at a _Quartier_ level, and stored as a _txt_ file. The problem is, some _SeLoger_ quartiers do not have a unique name, and they can only be told apart based on the postal code. But that information is not in the API response, so the best way is to match them with the low-quality ones, which do contain the name and postal code, and that also match the information present in the advertisements.
 In order to do that, some inconsistencies between the two sets of polygons have to be corrected; and then they are matched based on name, when the name is unique, and on geographic proximity, when it is not.
 NOTE: _SeLoger Quartiers_ are uniquely identified by name **AND** postal code!
 
@@ -38,17 +39,17 @@ NOTE: _SeLoger Quartiers_ are uniquely identified by name **AND** postal code!
 Simple download.
 
 #### _Codes Postaux_
-Quite challenging, since there not seems to exist any repository with the polygon areas of the _Codes Postaux_ (see [this post](https://www.r-bloggers.com/2024/11/codes-postaux/) and [this article](https://vivreparis.fr/pourquoi-le-16e-arrondissement-possede-t-il-deux-codes-postaux/) for some insights). What we do, as a best-possible approach, is to try to map _Communes_ to _Codes Postaux_, stemming from the realization that in most cases, either they map one-to-one, or a _Code Postal_ encompasses __exactly__ many _Communes_. To generate the polygons at the _Commune_, we start from the _IRIS_ polygons, and just melt together the polygons at the _Commune_ level. This is possible because _IRIS_ are an exact subdivision of _Communes_. Now comes the crucial step: 
+Quite challenging, since there not seems to exist any repository with the polygon areas of the _Codes Postaux_ (see [this post](https://www.r-bloggers.com/2024/11/codes-postaux/) and [this article](https://vivreparis.fr/pourquoi-le-16e-arrondissement-possede-t-il-deux-codes-postaux/) for some insights). What we do, as a best-possible approach, is to try to map _Communes_ to _Codes Postaux_, stemming from the realisation that in most cases, either they map one-to-one, or a _Code Postal_ encompasses __exactly__ many _Communes_. To generate the polygons at the _Commune_, we start from the _IRIS_ polygons, and just melt together the polygons at the _Commune_ level. This is possible because _IRIS_ are an exact subdivision of _Communes_. Now comes the crucial step: 
 - If there is a one-to-one mapping between _Commune_ and _Code Postal_, the polygon of the _Code Postal_ is set to be the one of the _Commune_.
 - If a _Code Postal_ contains __exactly__ multiple _Communes_, the polygon of the _Code Postal_ is the result of melting together the polygons of the _Communes_.
 - If a _Commune_ contains __exactly__ multiple _Codes Postaux_ (happens in around 8 cases), all of the _Codes Postaux_ get assigned the polygon of the _Commune_.
 - Finally, some _Codes Postaux_ contain multiple _Communes_ (happens in 3 cases), which in turn contain multiple _Codes Postaux_. Here, the polygon of the _Code Postal_ will be the melted union of the polygons of the _Communes_ where the _Code Postal_ is present. For instance: the _Code Posal_ 95710 corresponds to the _Communes_ 95101, 95150, and 95011, but inside the _Commune_ 95011 there are two _Codes Postaux_: 95710 and 95420. In that case, the _Code Postal_ 95710 gets assigned the melted polygons of 95101, 95150, and 95011; and the _Code Postal_ 95420 gets assigned the polygon of 95011. As a result, the polygons of both _Codes Postaux_ will partly overlap.
 
 ## Heat Stress
-The objective of this section is being able to tell how vulnerable a housing unit in Paris (or Île-de-France) is to heat and heat waves. This is done by calculating the average vulnerability at the _Code Postal_ (for Île-de-France) and at the _Conseil de Quartier_ (city of Paris) levels.
+The objective of this section is being able to tell how vulnerable a housing unit in Paris (or Île-de-France) is to heat and heat waves. This is done by calculating the average vulnerability at the _Code Postal_ (for Île-de-France) and at the _Conseil de Quartier_ and _SeLoger Quartier_ (city of Paris) levels.
 
 ### Data Sources
-The data containing heat stress values can be found at the webpage from [L'Insitut Paris Region](https://data-iau-idf.opendata.arcgis.com/datasets/iau-idf::ilots-de-chaleur-urbains-icu-classification-des-imu-en-zone-climatique-locale-lcz-al%C3%A9as-et-vuln%C3%A9rabilit%C3%A9s-%C3%A0-la-chaleur-de-jour-et-de-nuit-en-%C3%AEle-de-france/about). The heat stress metrics are given at the _IMU_ (Ilot mMrphologic Urbain) level (can be visualized [here](https://data-iau-idf.opendata.arcgis.com/datasets/iau-idf::ilots-de-chaleur-urbains-icu-classification-des-imu-en-zone-climatique-locale-lcz-al%C3%A9as-et-vuln%C3%A9rabilit%C3%A9s-%C3%A0-la-chaleur-de-jour-et-de-nuit-en-%C3%AEle-de-france/explore), which roughly corresponds to a polygon the size of a building or group of buildings.
+The data containing heat stress values can be found at the webpage from [L'Insitut Paris Region](https://data-iau-idf.opendata.arcgis.com/datasets/iau-idf::ilots-de-chaleur-urbains-icu-classification-des-imu-en-zone-climatique-locale-lcz-al%C3%A9as-et-vuln%C3%A9rabilit%C3%A9s-%C3%A0-la-chaleur-de-jour-et-de-nuit-en-%C3%AEle-de-france/about). The heat stress metrics are given at the _IMU_ (Ilot Morphologic Urbain) level (can be visualized [here](https://data-iau-idf.opendata.arcgis.com/datasets/iau-idf::ilots-de-chaleur-urbains-icu-classification-des-imu-en-zone-climatique-locale-lcz-al%C3%A9as-et-vuln%C3%A9rabilit%C3%A9s-%C3%A0-la-chaleur-de-jour-et-de-nuit-en-%C3%AEle-de-france/explore), which roughly corresponds to a polygon the size of a building or group of buildings.
 
 ### Code
 Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
@@ -58,7 +59,7 @@ Each _.py_ file does one thing, and is named accordingly. If you have doubts abo
 - _codes_postaux_heat_stress.py_: Calculates the average heat stress at a _Code Postal_ level. Generates  _codes_postaux_heat_stress.csv_
 
 ### Spatial Merges
-Merges are simply done by calculating the ration of the area of the intersection between any _IMU_ and any geographic unit (at the aforementioned three levels), with respect to the area of the geographic unit.
+Merges are simply done by calculating the ratio of the area of the intersection between any _IMU_ and any geographic unit (at the aforementioned three levels), with respect to the area of the geographic unit.
 
 ### Averaging
 Given a set of _IMUs_ $IMU_1, IMU_2, ..., IMU_N$ with corresponding heat stress values $x_1, x_2, ..., x_N$, the weighted average of $x$ for a polygon $P$ is defined as\
@@ -71,12 +72,12 @@ The interpretation of the heat stress variables can be found [here](https://www.
 - _vulnN_note_: Idem, but during the night.
 
 ### Results
-The resulting files are _seloger_quartiers_heat_stress.csv_, _conseils_de_quartier_heat_stress.csv_ and _codes_postaux_heat_stress.csv_. A quick visualization shows that central areas in Paris have a higher vulnerability than the periphery; and that the vulnerability is reduced by the presence of parks and green areas.
+The resulting files are _seloger_quartiers_heat_stress.csv_, _conseils_de_quartier_heat_stress.csv_ and _codes_postaux_heat_stress.csv_. A quick visualisation shows that central areas in Paris have a higher vulnerability than the periphery; and that the vulnerability is reduced by the presence of parks and green areas.
 
-![Benchmark rent by Conseil de Quartier](./heat_stress/figures/vj_cq.png)
+![Vulnerability by day, by Conseil de Quartier](./heat_stress/figures/vj_cq.png)
 
 ## Rent Control
-The objective of this section is matching the rent control data published by the [DRIHL](http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris/) with the spatial units usedr: _SeLoger Quartier_,  _Code Postal_ and _Conseil de Quartier_.
+The objective of this section is matching the rent control data published by the [DRIHL](http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris/) with the spatial units used: _SeLoger Quartier_,  _Code Postal_ and _Conseil de Quartier_.
 
 ### Data Sources
 The datasets containing the rent control data and polygons are directly extracted from the [DRIHL webpage](http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris/). An inspection of the webpage reveals that the polygons and data are fetched by API calls that request _.kml_ files from the same website. For the rest of the exercise filter for the most recent rent control limits, in place from 2024-07-01 to 2025-06-30, and keep only data for Paris city.
@@ -126,3 +127,30 @@ The resulting files are _seloger_quartiers_rent_control.csv_, _conseils_de_quart
 ![Benchmark rent by Conseil de Quartier](./rent_control/figures/cq_rc.png)
 
 A quick visualization shows that central areas in Paris have a higher reference rent than the periphery.
+
+## Flood Risk
+In this section we calculate the risk of river flood at the _Code Postal_ (for Île-de-France) and at the _Conseil de Quartier_ and _SeLoger Quartier_ (city of Paris) levels. Roughly, the idea consists on calculating the intersection between the areas with high risk of flood in any of the scenarios inside of the flood risk dataset (see the [following](#data-sources-2) section) with the geographic units. Before calculating the intersection however, the areas that are always underwater, such as rivers, are removed from the geographic units, because these areas are not labelled as having flood risk in the flood risk dataset.
+
+### Data Sources
+- The flood risk areas are extracted from [this map from the Insitut Paris Region](https://www.arcgis.com/apps/mapviewer/index.html?url=https://geoweb.iau-idf.fr/server/rest/services/RISQUES/cartoviz_zini_simplifiees/MapServer&source=sd).
+- The areas that are always underwater are also taken from an [Institut Paris Region map](https://www.arcgis.com/apps/mapviewer/index.html?url=https://geoweb.iau-idf.fr/server/rest/services/RISQUES/Cartoviz_zip/FeatureServer&source=sd).
+
+### Code
+Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
+- _flood_risk_geoshapes.py_: Downloads the flood risk dataset mentioned in the [Data Sources](#data-sources-2) Section above. Generates _flood_risk_geoshapes.geojson_
+- _always_underwater_geoshapes.py_: Downloads the always underwater dataset mentioned in the [Data Sources](#data-sources-2) Section above. Generates _always_underwater_geoshapes/all_layers.geojson_
+- _seloger_quartiers_flood_risk.py_: Calculates the proportion of each _SeLoger Quartier_ (excluding areas always underwater) that has high risk of flood. Generates _seloger_quartiers_flood_risk.csv_
+- _conseils_de_quartier_flood_risk.py_: Calculates the proportion of each _Conseil de Quartier_ (excluding areas always underwater) that has high risk of flood. Generates _conseil_de_quartiers_flood_risk.csv_
+- _codes_postaux_flood_risk.py_: Calculates the proportion of each _Code Postal_ (excluding areas always underwater) that has high risk of flood. Generates _codes_postaux_flood_risk.csv_
+
+### Proportion Calculation
+The proportion of area with flood risk is calculated as the ratio of the area of the geographic unit (at the aforementioned three levels) minus those parts which are always underwater, that intersects with the areas with flood risk, with respect to the area of the geographic unit minus the areas always underwater. Let $P$ be the shape of a geographic unit, $A$ be the shape of all areas always underwater, and $R$ be the shape of all areas with high flood risk. The the proportion of flood risk area is $prop$ is defined as\
+  $$prop = \frac{|(P\A)\ca R|}{|P\A|}$$\
+
+### Variables
+The only variable is _prop_at_flood_risk_, a real number between 0 and 1.
+
+### Results
+The resulting files are _seloger_quartiers_flood_risk.csv_, _conseils_de_quartier_flood_risk.csv_ and _codes_postaux_flood_risk.csv_. A quick visualization shows that areas in Paris close to the Seine have a higher flood risk.
+
+![Proportion of area at flood risk by Conseil de Quartier](./flood_risk/figures/fr_cq.png)
