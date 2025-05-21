@@ -36,15 +36,29 @@ height_scale_factor = (map_ymax - map_ymin) / (svg_ymax - svg_ymin)
 
 ### 4. FUNCTION DEFINITIONS
 def almost_equal(t1: Tuple[float], t2: Tuple[float]) -> bool:
+    '''
+    Checks if two coordinate pairs are almost equal.
+    '''
+    
     return abs(t1[0] - t2[0]) + abs(t1[1] - t2[1]) < 1e-8
     
 def translate(point: complex) -> Tuple[float]:
+    '''
+    Takes a coordinate point expressed as a complex number, and 
+    translates it from the SVG reference system to EPSG:2154.
+    '''
+    
     x = map_xmin + (point.real - svg_xmin) * width_scale_factor
     y = map_ymin + (point.imag - svg_ymin) * height_scale_factor
     
     return (x, y)
 
 def polygonize(path: svgpathtools.Path) -> shapely.geometry.Polygon:
+    '''
+    Convert the svgpathtools svgpathtools.Path of a polygon to a 
+    shapely polygon.
+    '''
+    
     points = [translate(line.start) for line in path]
     if not almost_equal(points[0], points[-1]):
         end_point = translate(path[-1].end)
@@ -53,7 +67,9 @@ def polygonize(path: svgpathtools.Path) -> shapely.geometry.Polygon:
     return shapely.geometry.Polygon(points)        
 
 def path_to_shapely(path: svgpathtools.Path) -> shapely.geometry.MultiPolygon:
-    '''Convert an svgpathtools svgpathtools.Path to a shapely geometry.'''
+    '''
+    Convert an svgpathtools svgpathtools.Path to a shapely geometry.
+    '''
     
     polygons = [polygonize(subpath) for subpath in path.continuous_subpaths()]               
     return shapely.union_all(geometries = polygons)
@@ -79,9 +95,5 @@ gdf = (
 gdf.to_file(data_dir / 'flood_risk_geoshapes.geojson')
 gdf.explore().save(figures_dir / 'flood_risk_areas.html')
 
-
-
-
-
-
-
+### 7. DELETE INTERMEDIARY FILES
+svg_destination.unlink()

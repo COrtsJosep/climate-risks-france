@@ -13,7 +13,7 @@ All analyses in this project are carried out at three geographic levels. From la
 - The polygons for the low-quality _SeLoger Quartiers_ are taken from the [SeLoger API](https://www.seloger.com/search-mfe-bff/places).
 - The polygons for the _SeLoger Quartiers_ are taken directly from the [SeLoger website, prix de l'immo section](https://www.seloger.com/prix-de-l-immo/vente/pays/france.htm#?BD=Head_AC_PrixImm_8&m=homepage_pricemap_quickaction_pricemap).
 - The polygons for the _Conseils de Quartier_ can be found at [data.gouv.fr](https://www.data.gouv.fr/fr/datasets/les-conseils-de-quartier-par-arrondissement-prs/).
-- The polygons for the _IRIS_ (Ilots Regroupés pour l'Information Statistique) are retrieved from the [géoservices webpage](https://geoservices.ign.fr/irisge)
+- The polygons for the _IRIS_ (Ilots Regroupés pour l'Information Statistique) are retrieved from the [géoservices webpage](https://geoservices.ign.fr/irisge).
 - The crosswalk between _IRIS_ and _Commune_ is from the [INSEE webpage](https://www.insee.fr/fr/information/7708995#).
 - Finally, the crosswalk between _Commune_ and _Code Postal_ can be found directly at [La Poste](https://datanova.laposte.fr/datasets/laposte-hexasmal).
 
@@ -34,7 +34,7 @@ The polygons are harvested by reading the API calls that the front-end makes whe
 In order to do that, some inconsistencies between the two sets of polygons have to be corrected; and then they are matched based on name, when the name is unique, and on geographic proximity, when it is not.
 NOTE: _SeLoger Quartiers_ are uniquely identified by name **AND** postal code!
 
-#### _Conseils de Quartier
+#### _Conseils de Quartier_
 Simple download.
 
 #### _Codes Postaux_
