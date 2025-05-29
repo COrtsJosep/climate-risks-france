@@ -107,7 +107,7 @@ for sl in gdf_sl.index:
     max_frac_in_zn = gdf_overlap.loc[:, 'frac_in_zn'].max() # fraction of area in the zone with maximum overlap
     
     zns.append(zn_max_frac_in_zn)
-    frac_in_zns.append(max_frac_in_zn)
+    frac_in_zns.append(max_frac_in_zn)  
     
 ## 5.2. TRANSLATION OF RENT CONTROL BY ZONE TO BY CODE POSTAL
 overlaps = [] # each column corresponds to a SeLoger Quartier, each row corresponds to the % of SeLoger Quartier in each rent control zone 

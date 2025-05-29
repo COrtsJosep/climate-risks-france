@@ -1,4 +1,5 @@
 ### 1. MODULE IMPORTS
+import shapely
 import zipfile
 import pandas as pd
 import urllib.request
@@ -75,7 +76,6 @@ df_cc = ( # cc: Commune - Code Postal
     .reset_index(drop = True)
     .rename(columns = {'code_commune_insee': 'DEPCOM', 'code_postal': 'CP'})
 )
-df_cc.loc[df_cc.loc[:, 'CP'] == '93380', 'DEPCOM'] = '93059' # There is one error on Pierrefite-sur-Seine
 
 ### 5. JOIN
 print('Joining tables...')
@@ -89,6 +89,28 @@ gdf = (
     .rename_axis('code_postal')
 )
 
-### 6. EXPORT
+### 6. CORRECTIONS
+## Grenoble commune has two codes postaux -- so in gdf, they share the same
+## overlapping shape. In reality, they should be split by a big road that
+## crosses the city: north of it is 38000, south is 38100. I have drawn
+## a rough line that should split the areas and assign to each one the correct
+## area.
+d1090_coordinates = (
+	(912000.4509191889, 6457039.053827161),
+	(913575.7331876741, 6457133.469878229),
+	(914617.1009851759, 6457616.500211682),
+	(915675.3285901955, 6458380.670238501),
+)
+d1090_line = shapely.LineString(coordinates = d1090_coordinates)
+gdf.loc[gdf.index == '38000'] = shapely.ops.split(
+    gdf.loc[gdf.index == '38000'].item(),
+    d1090_line
+).geoms[1]
+gdf.loc[gdf.index == '38100'] = shapely.ops.split(
+    gdf.loc[gdf.index == '38100'].item(),
+    d1090_line
+).geoms[0]
+
+### 7. EXPORT
 gdf.to_file(data_dir / 'codes_postaux_geoshapes.geojson')
 gdf.explore().save(figures_dir / 'codes_postaux.html')
