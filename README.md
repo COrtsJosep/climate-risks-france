@@ -1,5 +1,7 @@
-# climate-risks-paris
-This repository contains the code and data for my RAship work in the Parisian climate risk project.
+# climate-risks-france
+This repository contains the code and data for my RAship work in the French climate risk project.
+
+# TODO: SPLIT BETWEEN PARIS AND GRENOBLE
 
 ## Index
 - [Geographic Units](#geographic-units)
@@ -74,7 +76,7 @@ The interpretation of the heat stress variables can be found [here](https://www.
 ### Results
 The resulting files are _seloger_quartiers_heat_stress.csv_, _conseils_de_quartier_heat_stress.csv_ and _codes_postaux_heat_stress.csv_. A quick visualisation shows that central areas in Paris have a higher vulnerability than the periphery; and that the vulnerability is reduced by the presence of parks and green areas.
 
-![Vulnerability by day, by Conseil de Quartier](./heat_stress/figures/vj_cq.png)
+![Vulnerability by day, by Conseil de Quartier](./paris/heat_stress/figures/vj_cq.png)
 
 ## Rent Control
 The objective of this section is matching the rent control data published by the [DRIHL](http://www.referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr/paris/) with the spatial units used: _SeLoger Quartier_,  _Code Postal_ and _Conseil de Quartier_.
@@ -124,12 +126,12 @@ The numeric variables, all of them expressed as €/m², are:
 ### Results
 The resulting files are _seloger_quartiers_rent_control.csv_, _conseils_de_quartier_rent_control.csv_ and _codes_postaux_rent_control.csv_. Additionally, the files _seloger_quartiers_rent_control.csv_, _conseils_de_quartier_zone_overlap.csv_ and _codes_postaux_zone_overlap.csv_ show the % of area of each unit inside the _Zone_ with highest overlap.
 
-![Benchmark rent by Conseil de Quartier](./rent_control/figures/cq_rc.png)
+![Benchmark rent by Conseil de Quartier](./paris/rent_control/figures/cq_rc.png)
 
 A quick visualization shows that central areas in Paris have a higher reference rent than the periphery.
 
 ## Flood Risk
-In this section we calculate the risk of river flood at the _Code Postal_ (for Île-de-France) and at the _Conseil de Quartier_ and _SeLoger Quartier_ (city of Paris) levels. Roughly, the idea consists on calculating the intersection between the areas with high risk of flood in any of the scenarios inside of the flood risk dataset (see the [following](#data-sources-2) section) with the geographic units. Before calculating the intersection however, the areas that are always underwater, such as rivers, are removed from the geographic units, because these areas are not labelled as having flood risk in the flood risk dataset.
+In this section we calculate the risk of river flood at the _Code Postal_ (for Île-de-France) and at the _Conseil de Quartier_ and _SeLoger Quartier_ (city of Paris) levels. Roughly, the idea consists on calculating the intersection between the areas with high risk of flood in any of the scenarios inside of the flood risk dataset (see the [following](#data-sources-3) section) with the geographic units. Before calculating the intersection however, the areas that are always underwater, such as rivers, are removed from the geographic units, because these areas are not labelled as having flood risk in the flood risk dataset.
 
 ### Data Sources
 - The flood risk areas are extracted from [this map from the Insitut Paris Region](https://www.arcgis.com/apps/mapviewer/index.html?url=https://geoweb.iau-idf.fr/server/rest/services/RISQUES/cartoviz_zini_simplifiees/MapServer&source=sd).
@@ -137,15 +139,15 @@ In this section we calculate the risk of river flood at the _Code Postal_ (for �
 
 ### Code
 Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
-- _flood_risk_geoshapes.py_: Downloads the flood risk dataset mentioned in the [Data Sources](#data-sources-2) Section above. Generates _flood_risk_geoshapes.geojson_
-- _always_underwater_geoshapes.py_: Downloads the always underwater dataset mentioned in the [Data Sources](#data-sources-2) Section above. Generates _always_underwater_geoshapes/all_layers.geojson_
+- _flood_risk_geoshapes.py_: Downloads the flood risk dataset mentioned in the [Data Sources](#data-sources-3) Section above. Generates _flood_risk_geoshapes.geojson_
+- _always_underwater_geoshapes.py_: Downloads the always underwater dataset mentioned in the [Data Sources](#data-sources-3) Section above. Generates _always_underwater_geoshapes/all_layers.geojson_
 - _seloger_quartiers_flood_risk.py_: Calculates the proportion of each _SeLoger Quartier_ (excluding areas always underwater) that has high risk of flood. Generates _seloger_quartiers_flood_risk.csv_
 - _conseils_de_quartier_flood_risk.py_: Calculates the proportion of each _Conseil de Quartier_ (excluding areas always underwater) that has high risk of flood. Generates _conseil_de_quartiers_flood_risk.csv_
 - _codes_postaux_flood_risk.py_: Calculates the proportion of each _Code Postal_ (excluding areas always underwater) that has high risk of flood. Generates _codes_postaux_flood_risk.csv_
 
 ### Proportion Calculation
 The proportion of area with flood risk is calculated as the ratio of the area of the geographic unit (at the aforementioned three levels) minus those parts which are always underwater, that intersects with the areas with flood risk, with respect to the area of the geographic unit minus the areas always underwater. Let $P$ be the shape of a geographic unit, $A$ be the shape of all areas always underwater, and $R$ be the shape of all areas with high flood risk. The the proportion of flood risk area is $prop$ is defined as\
-  $$prop = \frac{|(P\setminus A)\cap R|}{|P\setminus A|}$$\
+  $$prop = \frac{|(P\setminus A)\cap R|}{|P\setminus A|}$$
 
 ### Variables
 The only variable is _prop_at_flood_risk_, a real number between 0 and 1.
@@ -153,4 +155,4 @@ The only variable is _prop_at_flood_risk_, a real number between 0 and 1.
 ### Results
 The resulting files are _seloger_quartiers_flood_risk.csv_, _conseils_de_quartier_flood_risk.csv_ and _codes_postaux_flood_risk.csv_. A quick visualization shows that areas in Paris close to the Seine have a higher flood risk.
 
-![Proportion of area at flood risk by Conseil de Quartier](./flood_risk/figures/cq_fr.png)
+![Proportion of area at flood risk by Conseil de Quartier](./paris/flood_risk/figures/cq_fr.png)

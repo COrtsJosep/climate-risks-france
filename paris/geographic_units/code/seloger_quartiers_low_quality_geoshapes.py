@@ -11,10 +11,11 @@ from pathlib import Path
 ### 2. DIRECTORY DEFINITIONS
 code_dir = Path(__file__).parent
 data_dir = code_dir.parent / 'data'
-figures_dir = code_dif.parent / 'figures'
+figures_dir = code_dir.parent / 'figures'
 
 ### 3. DICTIONARY CREATION 
 response = requests.get('https://www.seloger.com/search-mfe-bff/places/relations?paceId=AD08FR31096&placeType=NBH2')
+relations = response.json()['relations']
 
 placeIds = [relation['placeId'] for relation in relations]
 labels = [relation['label'] for relation in relations]
