@@ -42,9 +42,9 @@ gdf_ds = ( # ds: dissolved
     gdf_zn
     .merge(df_zn, left_on = 'VAR5', right_on = 'var5')
     .assign(rent_control_zone = lambda df: df.loc[:, 'var4'].map(zone_dict))
-    .rename(columns = {'var5': 'rent_control_category', 'rent_control_zone': 'Secteur géographique'})
-    .loc[:, ['Secteur géographique', 'geometry']]
-    .dissolve('Secteur géographique')
+    .rename(columns = {'var5': 'rent_control_category', 'rent_control_zone': 'zone'})
+    .loc[:, ['zone', 'geometry']]
+    .dissolve('zone')
     #.to_file(data_dir / 'rent_control_zones_geoshapes.geojson')
 )
 
@@ -63,18 +63,26 @@ pdf_destination.unlink() # delete it after it's been read
 
 ### 7. RENT CONTROL - CORRECTIONS
 colnames = [
-    'Secteur géographique',
-    'Nombre de pièces',
-    'Époque de construction',
-    'LNM - Loyer de référence',
-    'LNM - Loyer de référence majoré',
-    'LNM - Loyer de référence minoré',
-    'LM - Majoration unitaire du loyer de référence',
-    'LM - Loyer de référence',
-    'LM - Loyer de référence majoré',
-    'LM - Loyer de référence minoré'
+    'zone',
+    'rooms',
+    'epoque',
+    'refLN',
+    'refmajLN',
+    'refminLN',
+    'maj',
+    'refLM',
+    'refmajLM',
+    'refminLM'
 ]
 float_cols = colnames[3:]
+
+epoque_map = {
+    'avant 1946': 'inf1946', 
+    '1946-1970': '1946-1970', 
+    '1971-1990': '1971-1990', 
+    'après 1990': 'sup1990'
+}
+furnished_map = {'LN': 'non-meuble', 'LM': 'meuble'}
 
 df_rc = pd.concat([df1_rc.loc[7:], df2_rc.loc[7:]], axis = 0)
 df_rc = pd.concat([
@@ -88,7 +96,19 @@ df_rc = pd.concat([
 ], axis = 1)
     
 df_rc.columns = colnames
-df_rc.loc[:, float_cols] = df_rc.loc[:, float_cols].applymap(lambda x: x.replace(',', '.')).astype(float)
+df_rc.loc[:, float_cols] = df_rc.loc[:, float_cols].map(lambda x: x.replace(',', '.')).astype(float)
+df_rc = (
+    pd
+    .wide_to_long(
+        df_rc, 
+        ['ref', 'refmaj', 'refmin'], 
+        i = ['zone', 'rooms', 'epoque'], 
+        j = 'furnished', 
+        suffix = 'L\D'
+    )
+    .reset_index()
+    .replace({'epoque': epoque_map, 'furnished': furnished_map})
+)
 
 ### 8. MERGE EVERYTHING AND EXPORT
 (
@@ -96,11 +116,12 @@ df_rc.loc[:, float_cols] = df_rc.loc[:, float_cols].applymap(lambda x: x.replace
     .GeoDataFrame(
         data = (
             df_rc
-            .set_index('Secteur géographique')
+            .set_index('zone')
             .join(gdf_ds)
+            .reset_index(drop = False)
             .to_dict(orient = 'list')), # somehow index is not included???
         crs = gdf_ds.crs
     )
-    .set_index(df_rc.loc[:, 'Secteur géographique'])
+    .set_index('zone')
     .to_file(data_dir / 'rent_control_geoshapes.geojson')
 )

@@ -1,8 +1,6 @@
 # climate-risks-france
 This repository contains the code and data for my RAship work in the French climate risk project.
 
-# TODO: SPLIT BETWEEN PARIS AND GRENOBLE
-
 ## Index
 - [Paris](#paris)
   - [Geographic Units](#geographic-units-1)
@@ -119,6 +117,7 @@ In words, the weight given to $x_i$ is proportional to the area of the intersect
 The datasets _*_rent_control.csv_ have 4 categorical variables and 3 numeric variables.
 
 The categorical variables are:
+- the geographic unit;
 - _rooms_: number of rooms of the property: 1, 2, 3, or 4. 4 corresponds to 4 or more;
 - _epoque_: property construction epoque. Values are inf1946 (before 1946), 1946-1970, 1971-1990, sup1990 (after 1990);
 - _furnished_: meuble or non-meuble.
@@ -203,19 +202,12 @@ For this section we use the rent control set by the [ISERE](https://www.isere.go
 
 #### Code
 Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
-- _rent_control_zones_geoshapes.py_: Downloads and merges the datasets mentioned in the [Data Sources](#data-sources-5) Section above.
-- _seloger_quartiers_rent_control.py_: Calculates the averaÉpoque de
-constructionge rent control prices at a _SeLoger Quartier_ level. Generates _seloger_quartiers_rent_control.csv_, as well as _seloger_quartiers_zone_overlap.csv_
+- _rent_control_geoshapes.py_: Downloads and merges the datasets mentioned in the [Data Sources](#data-sources-5) Section above.
+- _seloger_quartiers_rent_control.py_: Calculates the average rent control prices at a _SeLoger Quartier_ level. Generates _seloger_quartiers_rent_control.csv_, as well as _seloger_quartiers_zone_overlap.csv_
 - _codes_postaux_rent_control.py_: Calculates the average rent control prices at a _Code Postal_ level. Generates  _codes_postaux_rent_control.csv_, as well as _codes_postaux_zone_overlap.csv_.
 
 #### Spatial Merges
-Grenoble and its periphery is divided in 6 zones (Zone 1, 2, 3, A, B and C), of which only 3 (1, 2 and A) are subject to rent controls.
-
-##### _Zone_ - _SeLoger Quartier_
-Almost as above, since we have 130 _Seloger Quartiers_, which are slightly smaller than a _Conseil de Quartier_.
-
-##### _Zone_ - _Code Postal_
-The .
+Grenoble and its periphery is divided in 6 _Zones_ (Zone 1, 2, 3, A, B and C), of which only 3 (1, 2 and A) are subject to rent controls. Simply calculate, for each geographic unit, with how many _Zones_ there is overlap, and do the average (see the [Averaging](#averaging-1) Section).
 
 #### Averaging
 Given a set of _Zones_ $Zone_1, Zone_2, ..., Zone_N$ with corresponding rent control values $x_1, x_2, ..., x_N$, the weighted average of $x$ for a polygon $P$ is defined as\
@@ -223,22 +215,24 @@ Given a set of _Zones_ $Zone_1, Zone_2, ..., Zone_N$ with corresponding rent con
 In words, the weight given to $x_i$ is proportional to the area of the intersection between $Zone_i$ and the polygon $P$. Note: the weights are normalized to 1; this means that even if a polygon has only a tiny subregion affected with rent control, that value is extrapolated to the whole polygon -- even if the majority of the polygon does not have rent control! Polygons where the sum of the weights is zero (not overlap with rent control zones) are kept out of the produced files.
 
 #### Variables
-The datasets _*_rent_control.csv_ have ? categorical variables and ??? numeric variables.
+The datasets _*_rent_control.csv_ have 4 categorical variables and 3 numeric variables.
 
 The categorical variables are:
+- the geographic unit;
 - _rooms_: number of rooms of the property: 1, 2, 3, or 4. 4 corresponds to 4 or more;
 - _epoque_: property construction epoque. Values are inf1946 (before 1946), 1946-1970, 1971-1990, sup1990 (after 1990);
 - _furnished_: meuble or non-meuble.
 
 The numeric variables, expressed as €/m² (except _maj_, which is a coefficient), are:
-- _ref_: benchmark rent, as calculated by the _Observatoire des loyers de l'agglomération parisienne_ (OLAP).
-- _refmaj_: higher benchmark rent (20% over the benchmark rent). Renting a property with a higher price is punishable by law.
-- _refmin_: lower benchmark rent (30% under the benchmark rent).
-- _maj_: 
+- _ref_: benchmark rent.
+- _refmaj_: higher benchmark rent. Renting a property with a higher price is punishable by law.
+- _refmin_: lower benchmark rent.
+
+A forth variable could be added, namely _Majoration unitaire du loyer de référence_, which is present in the ISERE table.
 
 #### Results
 The resulting files are _seloger_quartiers_rent_control.csv_ and _codes_postaux_rent_control.csv_. 
 
 ![Benchmark rent by Conseil de Quartier](./grenoble/rent_control/figures/sl_rc.png)
 
-A quick visualization shows that central areas in Grenoble have a higher reference rent than the periphery.
+A quick visualization shows that quartiers in the historic centre of Grenoble have a higher reference rent than the periphery.
