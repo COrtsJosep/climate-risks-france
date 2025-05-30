@@ -3,13 +3,13 @@ This repository contains the code and data for my RAship work in the French clim
 
 ## Index
 - [Paris](#paris)
-  - [Geographic Units](#geographic-units-1)
+  - [Geographic Units](#geographic-units)
   - [Heat Stress](#heat-stress)
-  - [Rent Control](#rent-control-1)
+  - [Rent Control](#rent-control)
   - [Flood Risk](#flood-risk)
 - [Grenoble](#grenoble)
-  - [Geographic Units](#geographic-units-2)
-  - [Rent Control](#rent-control-2)
+  - [Geographic Units](#geographic-units-1)
+  - [Rent Control](#rent-control-1)
 
 ## Paris
 
@@ -186,6 +186,8 @@ Simple download. _Low-quality_ means that the polygons are very roughly defined,
 ##### _SeLoger Quartiers_
 The polygons are harvested by reading the API calls that the front-end makes when you move around the prix-de-l'immo map at a _Quartier_ level, and stored as a _txt_ file. The problem is, some _SeLoger_ quartiers do not have a unique name, and they can only be told apart based on the postal code. But that information is not in the API response, so the best way is to match them with the low-quality ones, which do contain the name and postal code, and that also match the information present in the advertisements.
 In order to do that, some inconsistencies between the two sets of polygons have to be corrected; and then they are matched based on name.
+
+Note: we only get the _SeLoger Quartiers_ for Grenoble city, but if needed, we could expand to the municipalities around it.
 
 ##### _Codes Postaux_
 Quite challenging, since there not seems to exist any repository with the polygon areas of the _Codes Postaux_ (see [this post](https://www.r-bloggers.com/2024/11/codes-postaux/) and [this article](https://vivreparis.fr/pourquoi-le-16e-arrondissement-possede-t-il-deux-codes-postaux/) for some insights). What we do, as a best-possible approach, is to try to map _Communes_ to _Codes Postaux_, stemming from the realisation that in most cases, either they map one-to-one, or a _Code Postal_ encompasses __exactly__ many _Communes_. To generate the polygons at the _Commune_, we start from the _IRIS_ polygons, and just melt together the polygons at the _Commune_ level. This is possible because _IRIS_ are an exact subdivision of _Communes_. Now comes the crucial step: 
