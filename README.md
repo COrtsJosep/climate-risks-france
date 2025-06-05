@@ -7,9 +7,11 @@ This repository contains the code and data for my RAship work in the French clim
   - [Heat Stress](#heat-stress)
   - [Rent Control](#rent-control)
   - [Flood Risk](#flood-risk)
+  - [Heat Sensitivity](#heat-sensitivity)
 - [Grenoble](#grenoble)
   - [Geographic Units](#geographic-units-1)
   - [Rent Control](#rent-control-1)
+  - [Heat Sensitivity](#heat-sensitivity-1)
 
 ## Paris
 
@@ -161,6 +163,62 @@ The resulting files are _seloger_quartiers_flood_risk.csv_, _conseils_de_quartie
 
 ![Proportion of area at flood risk by Conseil de Quartier](./paris/flood_risk/figures/cq_fr.png)
 
+### Heat Sensitivity
+This section attempts to merge the heat sensitivity data that can be visualized in [this map from Cerema](https://cartagene.cerema.fr/portal/apps/dashboards/08066acd23974111be1584a5761fd6b9) with the spatial units from our analysis, namely,  _SeLoger Quartiers_, _Conseils de Quartier_ and _Codes Postaux_.
+
+#### Data Sources
+All data for this section is taken from a 2022 local climatic zones dataset from [data.gouv.fr](https://www.data.gouv.fr/fr/datasets/cartographie-des-zones-climatiques-locales-lcz-de-83-aires-urbaines-de-plus-de-50-000-habitants-2022/).
+
+#### Code
+Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
+- _heat_sensitivity_geoshapes.py_: Downloads and merges the datasets mentioned in the [Data Sources](#data-sources-4) Section above.
+- _seloger_quartiers_heat_sensitivity.py_: Calculates the average heat sensitivity at a _SeLoger Quartier_ level. Generates _seloger_quartiers_heat_sensitivity.csv_.
+- _conseils_de_quartier_heat_sensitivity.py_: Calculates the average heat sensitivity at a _Conseil de Quartier_ level. Generates _conseils_de_quartier_heat_sensitivity.csv_.
+- _codes_postaux_heat_sensitivity.py_: Calculates the average heat sensitivity at a _Code Postal_ level. Generates  _codes_postaux_heat_sensitivity.csv_.
+
+#### Spatial Merges
+Calculated by intersection between the geometric units used in the heat sensitivity dataset (defined by the Urban Atlas 2018) and the geographic unit of analysis (_Code Postal_, etc.).
+
+#### Averaging
+Given a set of _Units_ $Unit_1, Unit_2, ..., Unit_N$ with corresponding heat stress values $x_1, x_2, ..., x_N$, the weighted average of $x$ for a polygon $P$ is defined as\
+  $$\hat{x} = \frac{\sum_{i=1}^{N}|Unit_i \cap P|x_i}{\sum_{i=1}^{N}|Unit_i \cap P|}$$\
+In words, the weight given to $x_i$ is proportional to the area of the intersection between $Unit_i$ and the polygon $P$. Note: the weights are normalized to 1, even though the proportion of the polygon covered by units might be less than 1.
+
+#### Variables
+The datasets _*_heat_sensitivity.csv_ have 14 numeric variables:
+- hre: average height of buildings (in m)
+- are: average surface area of buildings (in m²)
+- bur: rate of built-up area (in %)
+- ror: rate of impermeable mineral surface (in %)
+- bsr: permeable bare soil rate (as a %)
+- war: water surface rate (as a %)
+- ver: vegetation rate (as a %)
+- vhr: share of wooded vegetation in total vegetation (as a %)
+- Très Forte Sensibilité: share of area with very strong heat sensibility (as a %)
+- Forte Sensibilité: share of area with strong heat sensibility (as a %)
+- Sensibilité Moyenne: share of area with medium heat sensibility (as a %)
+- Faible Sensibilité: share of area with weak heat sensibility (as a %)
+- Sensibilité Faible à Nulle: share of area with very weak heat sensibility (as a %)
+- Sensibilité Variable: share of area with variable heat sensibility (as a %)
+
+Note, for each geographic unit, the sum of the 6 sensitivity variables adds to 100.
+
+For more details, check the [technical guide](https://www.data.gouv.fr/fr/datasets/6641c562e5acdb35c0e6051d/#/resources/f80e08a4-ecd1-42a2-a8d6-963af16aec75) and the [usage guide](https://doc.cerema.fr/Default/doc/SYRACUSE/600739/cartographie-nationale-de-donnees-de-zones-climatiques-locales-guide-utilisateurs).
+
+#### Results
+The resulting files are _seloger_quartiers_heat_sensitivity.csv_, _conseils_de_quartier_heat_sensitivity.csv_ and _codes_postaux_heat_sensitivity.csv_. 
+
+![% of area with very high heat sensitivity by SeLoger Quartier](./paris/heat_sensitivity/figures/sl_tfs.png)
+
+A quick visualization shows that quartiers in the historic centre of Paris have a higher heat sensitivity than the periphery.
+
+
+
+
+
+
+
+
 ## Grenoble
 
 ### Geographic Units
@@ -235,6 +293,54 @@ A forth variable could be added, namely _Majoration unitaire du loyer de référ
 #### Results
 The resulting files are _seloger_quartiers_rent_control.csv_ and _codes_postaux_rent_control.csv_. 
 
-![Benchmark rent by Conseil de Quartier](./grenoble/rent_control/figures/sl_rc.png)
+![Benchmark rent by SeLoger Quartier](./grenoble/rent_control/figures/sl_rc.png)
 
 A quick visualization shows that quartiers in the historic centre of Grenoble have a higher reference rent than the periphery.
+
+### Heat Sensitivity
+This section attempts to merge the heat sensitivity data that can be visualized in [this map from Cerema](https://cartagene.cerema.fr/portal/apps/dashboards/08066acd23974111be1584a5761fd6b9) with the spatial units from our analysis, namely,  _SeLoger Quartiers_ and _Codes Postaux_.
+
+#### Data Sources
+All data for this section is taken from a 2022 local climatic zones dataset from [data.gouv.fr](https://www.data.gouv.fr/fr/datasets/cartographie-des-zones-climatiques-locales-lcz-de-83-aires-urbaines-de-plus-de-50-000-habitants-2022/).
+
+#### Code
+Each _.py_ file does one thing, and is named accordingly. If you have doubts about how something was done, which is not explained here, you can read the code: I tried to add helpful comments.
+- _heat_sensitivity_geoshapes.py_: Downloads and merges the datasets mentioned in the [Data Sources](#data-sources-7) Section above.
+- _seloger_quartiers_heat_sensitivity.py_: Calculates the average heat sensitivity at a _SeLoger Quartier_ level. Generates _seloger_quartiers_heat_sensitivity.csv_.
+- _codes_postaux_heat_sensitivity.py_: Calculates the average heat sensitivity at a _Code Postal_ level. Generates  _codes_postaux_heat_sensitivity.csv_.
+
+#### Spatial Merges
+Calculated by intersection between the geometric units used in the heat sensitivity dataset (defined by the Urban Atlas 2018) and the geographic unit of analysis (_Code Postal_, etc.).
+
+#### Averaging
+Given a set of _Units_ $Unit_1, Unit_2, ..., Unit_N$ with corresponding heat stress values $x_1, x_2, ..., x_N$, the weighted average of $x$ for a polygon $P$ is defined as\
+  $$\hat{x} = \frac{\sum_{i=1}^{N}|Unit_i \cap P|x_i}{\sum_{i=1}^{N}|Unit_i \cap P|}$$\
+In words, the weight given to $x_i$ is proportional to the area of the intersection between $Unit_i$ and the polygon $P$. Note: the weights are normalized to 1, even though the proportion of the polygon covered by units might be less than 1.
+
+#### Variables
+The datasets _*_heat_sensitivity.csv_ have 14 numeric variables:
+- hre: average height of buildings (in m)
+- are: average surface area of buildings (in m²)
+- bur: rate of built-up area (in %)
+- ror: rate of impermeable mineral surface (in %)
+- bsr: permeable bare soil rate (as a %)
+- war: water surface rate (as a %)
+- ver: vegetation rate (as a %)
+- vhr: share of wooded vegetation in total vegetation (as a %)
+- Très Forte Sensibilité: share of area with very strong heat sensibility (as a %)
+- Forte Sensibilité: share of area with strong heat sensibility (as a %)
+- Sensibilité Moyenne: share of area with medium heat sensibility (as a %)
+- Faible Sensibilité: share of area with weak heat sensibility (as a %)
+- Sensibilité Faible à Nulle: share of area with very weak heat sensibility (as a %)
+- Sensibilité Variable: share of area with variable heat sensibility (as a %)
+
+Note, for each geographic unit, the sum of the 6 sensitivity variables adds to 100.
+
+For more details, check the [technical guide](https://www.data.gouv.fr/fr/datasets/6641c562e5acdb35c0e6051d/#/resources/f80e08a4-ecd1-42a2-a8d6-963af16aec75) and the [usage guide](https://doc.cerema.fr/Default/doc/SYRACUSE/600739/cartographie-nationale-de-donnees-de-zones-climatiques-locales-guide-utilisateurs).
+
+#### Results
+The resulting files are _seloger_quartiers_heat_sensitivity.csv_ and _codes_postaux_heat_sensitivity.csv_. 
+
+![% of area with very high heat sensitivity by SeLoger Quartier](./grenoble/heat_sensitivity/figures/sl_tfs.png)
+
+A quick visualization shows that quartiers in the historic centre of Grenoble have a higher heat sensitivity than the periphery.

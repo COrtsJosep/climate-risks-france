@@ -73,7 +73,7 @@ for sl in tqdm.tqdm(gdf_sl.index): # takes around 10 minutes
     # for all variables at once using a matrix multiplication
     s = gdf_hs.loc[:, numeric_cols].multiply(gdf_hs.loc[:, 'geo_weight'], axis = 0).sum() 
     
-    # set the name of the series to the name of the Conseil de Quartier
+    # set the name of the series to the name of the SeLoger Quartier
     s.name = sl
     
     # concatenate all series in a list, to later merge them in a df
