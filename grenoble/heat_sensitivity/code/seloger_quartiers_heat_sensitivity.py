@@ -29,7 +29,7 @@ numeric_cols = [
 
 def map_lcz_to_sensibilite(lcz: str) -> str:
     '''
-    Translates from the LCZ type to the Sensibility category
+    Translates from the LCZ type to the Sensitivity category
     '''
     if lcz in ('1', '2'):
         return 'Très Forte Sensibilité'
@@ -92,4 +92,4 @@ gdf_sl.join(df_wa).explore('bur').save(figures_dir / 'bur_map_per_seloger_quarti
 
 ### 7. DATA EXPORTS
 print('Exporting data...')
-df_wa.to_csv(data_dir / 'seloger_quartiers_heat_sensibility.csv')
+df_wa.to_csv(data_dir / 'seloger_quartiers_heat_sensitivity.csv')

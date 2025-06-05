@@ -29,7 +29,7 @@ numeric_cols = [
 
 def map_lcz_to_sensibilite(lcz: str) -> str:
     '''
-    Trancpates from the LCZ type to the Sensibility category
+    Translates from the LCZ type to the Sensitivity category
     '''
     if lcz in ('1', '2'):
         return 'Très Forte Sensibilité'
@@ -92,4 +92,4 @@ gdf_cp.join(df_wa).explore('bur').save(figures_dir / 'bur_map_per_code_postal.ht
 
 ### 7. DATA EXPORTS
 print('Exporting data...')
-df_wa.to_csv(data_dir / 'codes_postaux_heat_sensibility.csv')
+df_wa.to_csv(data_dir / 'codes_postaux_heat_sensitivity.csv')

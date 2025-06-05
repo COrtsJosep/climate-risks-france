@@ -194,12 +194,12 @@ The datasets _*_heat_sensitivity.csv_ have 14 numeric variables:
 - war: water surface rate (as a %)
 - ver: vegetation rate (as a %)
 - vhr: share of wooded vegetation in total vegetation (as a %)
-- Très Forte Sensibilité: share of area with very strong heat sensibility (as a %)
-- Forte Sensibilité: share of area with strong heat sensibility (as a %)
-- Sensibilité Moyenne: share of area with medium heat sensibility (as a %)
-- Faible Sensibilité: share of area with weak heat sensibility (as a %)
-- Sensibilité Faible à Nulle: share of area with very weak heat sensibility (as a %)
-- Sensibilité Variable: share of area with variable heat sensibility (as a %)
+- Très Forte Sensibilité: share of area with very strong heat sensitivity (as a %)
+- Forte Sensibilité: share of area with strong heat sensitivity (as a %)
+- Sensibilité Moyenne: share of area with medium heat sensitivity (as a %)
+- Faible Sensibilité: share of area with weak heat sensitivity (as a %)
+- Sensibilité Faible à Nulle: share of area with very weak heat sensitivity (as a %)
+- Sensibilité Variable: share of area with variable heat sensitivity (as a %)
 
 Note, for each geographic unit, the sum of the 6 sensitivity variables adds to 100.
 
@@ -327,12 +327,12 @@ The datasets _*_heat_sensitivity.csv_ have 14 numeric variables:
 - war: water surface rate (as a %)
 - ver: vegetation rate (as a %)
 - vhr: share of wooded vegetation in total vegetation (as a %)
-- Très Forte Sensibilité: share of area with very strong heat sensibility (as a %)
-- Forte Sensibilité: share of area with strong heat sensibility (as a %)
-- Sensibilité Moyenne: share of area with medium heat sensibility (as a %)
-- Faible Sensibilité: share of area with weak heat sensibility (as a %)
-- Sensibilité Faible à Nulle: share of area with very weak heat sensibility (as a %)
-- Sensibilité Variable: share of area with variable heat sensibility (as a %)
+- Très Forte Sensibilité: share of area with very strong heat sensitivity (as a %)
+- Forte Sensibilité: share of area with strong heat sensitivity (as a %)
+- Sensibilité Moyenne: share of area with medium heat sensitivity (as a %)
+- Faible Sensibilité: share of area with weak heat sensitivity (as a %)
+- Sensibilité Faible à Nulle: share of area with very weak heat sensitivity (as a %)
+- Sensibilité Variable: share of area with variable heat sensitivity (as a %)
 
 Note, for each geographic unit, the sum of the 6 sensitivity variables adds to 100.
 
