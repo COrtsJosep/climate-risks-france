@@ -2,6 +2,7 @@
 import pandas as pd
 import geopandas as gpd
 from pathlib import Path
+from matplotlib import pyplot as plt
 
 ### 2. PATH DEFINITIONS
 code_dir = Path(__file__).parent
@@ -153,3 +154,13 @@ for rooms in ROOMS:
 gdf_map = gdf_sl.reset_index().merge(dfs_rc_pr[0], how = 'inner', on = ['seloger_quartier', 'code_postal'])
 gdf_map['ref'] = gdf_map['ref'].astype(float)
 gdf_map.explore('ref', cmap = 'cool').save(figures_dir / 'rent_control_map_per_seloger_quartier.html')
+
+cmap = plt.get_cmap('glasbey')
+fig, ax = plt.subplots()
+gdf_zn.loc[gdf_zn.index < 15].sample(frac = 1, random_state = 1).plot(ax = ax, cmap = cmap)
+gdf_sl.boundary.plot(ax = ax, color='k')
+plt.title('SeLoger Quartier - Rent Control Zone Overlap')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.figtext(0.05, 0.01, 'Colours denote Rent Control Zones.\nBlack lines denote SeLoger Quartiers.\n', ha = 'left')
+plt.savefig(figures_dir / 'sl_rcz_overlap_map.pdf')
