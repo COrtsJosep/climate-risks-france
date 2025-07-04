@@ -1,7 +1,10 @@
 ### 1. PATH DEFINITIONS
+import colorcet
+import numpy as np
 import pandas as pd
 import geopandas as gpd
 from pathlib import Path
+from matplotlib import pyplot as plt
 
 ### 2. PATH DEFINITIONS
 code_dir = Path(__file__).parent
@@ -40,8 +43,6 @@ HOUSING_TYPE = {
 ROOMS = ['_' + str(i) for i in range(1, 5)]
 EPOQUE = ['_inf1946', '_1946-1970', '_1971-1990', '_sup1990']
 FURNISHED = ['_meuble', '_non-meuble']
-
-CP_PARIS = ['750' + str(i).zfill(2) for i in range(1, 21)] + ['75116']
 
 ### 4. CONCATENATION OF ALL THE GDFs
 gdfs = []
@@ -90,20 +91,18 @@ gdf_rc = ( # rc: rent control
 
 ### 5. JOIN WITH CODES POSTAUX
 gdf_cp = gpd.read_file(geoshapes_dir / 'codes_postaux_geoshapes.geojson').set_index('code_postal').to_crs('EPSG:4326') # cp: code postal
-gdf_cp_pr = gdf_cp.loc[gdf_cp.index.isin(CP_PARIS)] # pr: paris
 
 gdf_zn = ( # zn: zone
     gdf_rc
-    .drop_duplicates('idZone')
-    .loc[:, ['idZone', 'geometry']]
-    .set_index('idZone')
+    .dissolve(by = 'idZone')
+    .loc[:, ['geometry']]
 )
 
 ## 5.1. SMALL EXERCISE TO SEE CORRESPONDANCE QUALITY
 zns = [] # zones (ID)
 frac_in_zns = [] # fraction of area of the Conseil de Quartier inside the zone
-for cp in gdf_cp_pr.index:
-    cp_shape = gdf_cp_pr.loc[cp, 'geometry']
+for cp in gdf_cp.index:
+    cp_shape = gdf_cp.loc[cp, 'geometry']
 
     gdf_overlap = gdf_zn.assign(frac_in_zn = lambda df: df.loc[:, 'geometry'].apply(lambda zn_shape: zn_shape.intersection(cp_shape).area / cp_shape.area))
     zn_max_frac_in_zn = gdf_overlap.loc[:, 'frac_in_zn'].idxmax() # zone with maximum overlap
@@ -114,34 +113,68 @@ for cp in gdf_cp_pr.index:
     
 ## 5.2. TRANSLATION OF RENT CONTROL BY ZONE TO BY CODE POSTAL
 overlaps = [] # each column corresponds to a CP, each row corresponds to the % of CP in each rent control zone 
-for cp in gdf_cp_pr.index:
-    cp_shape = gdf_cp_pr.loc[cp, 'geometry']
+for cp in gdf_cp.index:
+    cp_shape = gdf_cp.loc[cp, 'geometry']
     overlap = gdf_zn.loc[:, 'geometry'].apply(lambda zn_shape: zn_shape.intersection(cp_shape).area / cp_shape.area).rename(cp)
     overlaps.append(overlap)
     
-df_ol = pd.concat(overlaps, axis = 1) # ol: overlap. Is a (#CP x #Zones) matrix (after being transposed in the next line)
+df_ol = pd.concat(overlaps, axis = 1).sort_values(by = 'idZone')  # ol: overlap. Is a (#CdQ x #Zones) matrix (after being transposed in the next line)
+df_ol = (df_ol / df_ol.sum()).T # here I divide by the sum so that all weights add to 1
 
-df_ol_pr = (df_ol.loc[df_ol.index < 15] / df_ol.loc[df_ol.index < 15].sum()).T # pr: Paris. here I divide by the sum so that all weights add to 1
-gdf_rc_pr = gdf_rc.loc[(gdf_rc.loc[:, 'city'] == 'paris') & (gdf_rc.loc[:, 'period'] == '2024-07-01')] # filter for Paris and last rent control values 
+# filter for last rent control values 
+most_recent_periods = set([l[-1] for k, l in PERIOD.items()])
+gdf_rc = gdf_rc.loc[(gdf_rc.loc[:, 'period'].isin(most_recent_periods))]
 
-dfs_rc_pr = []
+# for Paris, app. and msn values are the same, but not for the others.
+# so duplicate the rows for Paris  and fill them with app. and msn.
+gdf_rc_non_paris = gdf_rc.query('city != "paris"')
+gdf_rc_paris = gdf_rc.query('city == "paris"')
+gdf_rc_paris_app = (
+    gdf_rc_paris
+    .copy()
+    .fillna('appartement') # only this col has na
+)
+gdf_rc_paris_msn = (
+    gdf_rc_paris
+    .copy()
+    .fillna('maison')
+)
+
+gdf_rc = pd.concat(
+    [gdf_rc_non_paris,
+     gdf_rc_paris_app,
+     gdf_rc_paris_msn
+    ]
+)
+
+dfs_rc = []
 for rooms in ROOMS:
     for epoque in EPOQUE:
         for furnished in FURNISHED: 
-            # for each combination of rooms, epoque and furnished, calculate the weighted average of the rent control values, for each CdQ.
-            # this is done by matrix multiplication: the rent control values of all zones are weighted by the % they contain of a given CdQ. 
-            df_rc_pr = df_ol_pr @ gdf_rc_pr.query(f'rooms == {rooms[1:]} and epoque == "{epoque[1:]}" and furnished == "{furnished[1:]}"').set_index('idZone').loc[:, float_cols]
-            df_rc_pr.loc[:, 'rooms'] = rooms[1:]
-            df_rc_pr.loc[:, 'epoque'] = epoque[1:]
-            df_rc_pr.loc[:, 'furnished'] = furnished[1:]
-            df_rc_pr = df_rc_pr.rename_axis('code_postal')
-            
-            dfs_rc_pr.append(df_rc_pr)
+            for housing_type in {housing_type for housing_type in HOUSING_TYPE.values() for housing_type in housing_type if housing_type}:
+                # for each combination of rooms, epoque and furnished, calculate the weighted average of the rent control values, for each CP.
+                # this is done by matrix multiplication: the rent control values of all zones are weighted by the % they contain of a given CP.
+                df_tmp = (
+                    gdf_rc
+                    .query(f'rooms == {rooms[1:]} and epoque == "{epoque[1:]}" and furnished == "{furnished[1:]}" and housingType == "{housing_type[1:]}"')
+                    .loc[:, ['idZone'] + float_cols]
+                    .drop_duplicates()
+                    .sort_values(by = 'idZone')
+                    .set_index('idZone')
+                )
+                df_rc = df_ol @ df_tmp
+                df_rc.loc[:, 'rooms'] = rooms[1:]
+                df_rc.loc[:, 'epoque'] = epoque[1:]
+                df_rc.loc[:, 'furnished'] = furnished[1:]
+                df_rc.loc[:, 'housingType'] = housing_type[1:]
+                df_rc = df_rc.rename_axis(gdf_cp.index.names)
+                
+                dfs_rc.append(df_rc)
 
 ### 6. EXPORTS
 (
     pd
-    .DataFrame(data = {'code_postal': gdf_cp_pr.index, 'zn': zns, 'frac_in_zn': frac_in_zns})
+    .DataFrame(data = {'code_postal': gdf_cp.index, 'zn': zns, 'frac_in_zn': frac_in_zns})
     .set_index('code_postal')
     .sort_values(by = 'frac_in_zn')
     .to_csv(data_dir / 'codes_postaux_zone_overlap.csv')
@@ -149,13 +182,34 @@ for rooms in ROOMS:
 
 (
     pd
-    .concat(dfs_rc_pr) # concatenate all room, epoque, furnished combinations
-    .reset_index()
-    .loc[:, ['code_postal', 'rooms', 'epoque', 'furnished'] + float_cols]
+    .concat(dfs_rc) # concatenate all room, epoque, furnished combinations
+    .loc[:, ['rooms', 'epoque', 'furnished', 'housingType'] + float_cols]
     .dropna() # CP outside the Paris metropolitan area do not overlap with rent control zones, so they have missing values
     .to_csv(data_dir / 'codes_postaux_rent_control.csv', index = False)
 )
 
-gdf_map = gdf_cp.reset_index().merge(dfs_rc_pr[0], how = 'inner', on = 'code_postal')
+### 7. MAPS
+gdf_map = gdf_cp.reset_index().merge(dfs_rc[0], how = 'inner', on = 'code_postal')
 gdf_map['ref'] = gdf_map['ref'].astype(float)
 gdf_map.explore('ref', cmap = 'cool').save(figures_dir / 'rent_control_map_per_code_postal.html')
+
+cmap = plt.get_cmap('cet_glasbey_hv')
+fig, ax = plt.subplots()
+gdf_zn.plot(
+    ax = ax, 
+    cmap = cmap, 
+    column = np.array(gdf_zn.index), 
+    legend = True, 
+    legend_kwds = {
+        'title': 'Rent Control Zones',     
+        'bbox_to_anchor': (1, 1), 
+        'loc': 'upper left'},
+    categorical = True,
+    )
+gdf_cp.boundary.plot(ax = ax, color = 'k', linewidth = 0.1)
+
+plt.title('Code Postal - Rent Control Zone Overlap')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.figtext(0.05, -0.1, 'Colours denote Rent Control Zones.\nBlack lines denote Codes Postauz.\n', ha = 'left')
+plt.savefig(figures_dir / 'cp_rcz_overlap_map.pdf', bbox_inches = 'tight')
