@@ -31,7 +31,7 @@ Ecole Militaire,75007,0.0
 Gros Caillou,75007,0.4673376876263712
 Invalides,75007,0.32703997304992594
 Saint Thomas d'Aquin,75007,0.3303519230975163
-Seine et Berges,75007,0.5500663425689013
+Seine et Berges,75007,0.5301727250431676
 Elysées-Madeleine,75008,0.46196970725607545
 Europe,75008,0.08999455812356898
 Hoche-Friedland,75008,0.0
@@ -62,7 +62,7 @@ Bercy,75012,0.5539576316854463
 Bois de Vincennes,75012,0.036680009822623406
 Jardin de Reuilly,75012,0.3401432576326762
 Nation-Picpus,75012,0.000695968951122225
-Seine et Berges,75012,0.4262481521598602
+Seine et Berges,75012,0.4539323276264959
 Vallée de Fécamp,75012,0.006188895226121045
 Bièvres Sud Tolbiac,75013,0.0
 Buttes Aux Cailles-Glacière,75013,0.0
@@ -86,7 +86,7 @@ Emeriau-Zola,75015,0.9245541369045819
 Georges Brassens,75015,0.0
 Pasteur Montparnasse,75015,0.0
 Saint Lambert,75015,0.4532709363386177
-Seine et Berges,75015,0.43202595552640644
+Seine et Berges,75015,0.4329585498646337
 Vaugirard-Parc des Expositions,75015,0.4882028383579925
 Violet Commerce,75015,0.8907670277770635
 Auteuil Nord,75016,0.3560151832710843
@@ -129,3 +129,159 @@ Plaine,75020,0.0
 Père Lachaise-Réunion,75020,0.0
 Saint Blaise,75020,0.0
 Télégraphe-Pelleport Saint Fargeau,75020,0.0
+Bourse du Travail,93000,0.0
+Edouard Vaillant,93000,0.0
+Les Vignes,93000,0.0
+Prefecture,93000,0.0
+Bas Montreuil-Bobillot,93100,0.0
+Bas Montreuil-Etienne Marcel-Chanzy,93100,0.0
+Bas Montreuil-République,93100,0.0
+Bel Air-Grands Pêchers-Renan,93100,0.0
+Branly-Boissière,93100,0.0
+Centre Ville-Jean Moulin-Beaumont,93100,0.0
+La Noue-Clos Français,93100,0.0
+Ramenas-Léo Lagrange,93100,0.0
+Ruffins-Théophile Sueur-Montreau-Le Morillon,93100,0.0
+Signac-Murs à Pêches,93100,0.0
+Solidarité Carnot,93100,0.0
+Anatole France,93120,0.0
+Balzac-Moulin Neuf,93120,0.0
+Braque,93120,0.0
+Centre Ville-Convention,93120,0.0
+Centre Ville-Mairie,93120,0.0
+La Gare,93120,0.0
+La Tour,93120,0.0
+Parc Départemental,93120,0.0
+Quatre Routes,93120,0.0
+Rateau,93120,0.0
+Verlaine-Paul Verlaine,93120,0.0
+Verlaine-Routes,93120,0.0
+Waldeck Rochet-Quinet Cachin,93120,0.0
+Waldeck Rochet-Zone Industrielle,93120,0.0
+Boissière,93130,0.0
+Centre Ville-Gare,93130,0.0
+Centre Ville-Mairie,93130,0.0
+Haut Goulet-Jules Auffret,93130,0.0
+Langevin,93130,0.0
+Londeau,93130,0.0
+Léo Lagrange,93130,0.0
+Merlan,93130,0.0
+Petit Noisy,93130,0.0
+Zone Industrielle,93130,0.0
+La Mare à la Veuve-La Remise à Jorelle,93140,0.0
+Le Mainguy-Le Moulin à Vent,93140,0.0
+Le Saule Blanc,93140,0.0
+Noue Caillet-Terre Saint Blaise-Les Mérisiers,93140,0.0
+Centre Sud-Jules Ferry,93170,0.0
+Centre Sud-La Capsulerie,93170,0.0
+Centre-Jean Moulin,93170,0.0
+Centre-Sadi Carnot,93170,0.0
+Coutures-Victor Hugo,93170,0.0
+Coutures-Édouard Vaillant,93170,0.0
+Dhuys-François Mitterand,93170,0.0
+Dhuys-Gallieni,93170,0.0
+Dhuys-Hoche,93170,0.0
+Dhuys-René Alazard,93170,0.0
+La Noue ,93170,0.0
+Malassis-Pierre et Marie Curie,93170,0.0
+Malassis-Stalingrad,93170,0.0
+Plateau-Anatole France,93170,0.0
+Plateau-Gambetta,93170,0.0
+Plateau-Girardot,93170,0.0
+Allende,93200,0.0
+Centre Ville-Basilique,93200,0.0
+Cosmonautes,93200,0.0
+Delaunay Belleville,93200,0.5348888159320021
+Floréal-La Saussaie-La Courtille,93200,0.16907027651245174
+Franc Moisin-Bel Air,93200,0.0
+Mutuelle-Barbusse-Saint Rémy- Joliot Curie,93200,0.3215099836730525
+Pleyel,93200,0.06449819060267954
+Péri-Langevin-Stalingrad-Politzer,93200,0.17763334023036978
+République-Gare-Porte de Paris,93200,0.3112427816609824
+Sémard-Delaune-Guynemer,93200,0.007351183252567444
+La Plaine-Stade de France,93210,0.0
+Bas Pays,93230,0.0
+Cachin,93230,0.0
+Carnot,93230,0.0
+Centre,93230,0.0
+Cité,93230,0.0
+Communes,93230,0.0
+Grands Champs,93230,0.0
+Ormes,93230,0.0
+Parcs,93230,0.0
+ZAC,93230,0.0
+L'Avenir,93240,0.0
+L'Avenir-La Cerisaie,93240,0.0
+La Cité-Jardin,93240,0.0
+Le Bois Moussay-Les Parouzets,93240,0.0
+Le Clos Saint Lazare,93240,0.0
+Le Globe-Allende,93240,0.0
+Le Maroc,93240,0.0
+Le Vieux Stains-Bordes,93240,0.0
+Prêtresse,93240,0.0
+Convention,93260,0.0
+Croix de l'Epinette,93260,0.0
+Jalancloud,93260,0.0
+L'Avenir,93260,0.0
+L'Eglise,93260,0.0
+La Mairie,93260,0.0
+Le Fort,93260,0.0
+Les Bruyeres,93260,0.0
+Les Sentes,93260,0.0
+Villegranges,93260,0.0
+Centre Ville,93300,0.0
+Cochennec Péri,93300,0.0
+Condorcet,93300,0.0
+Emile Dubois,93300,0.0
+Firmin Genier,93300,0.0
+Landy,93300,0.0
+Paul Bert,93300,0.0
+Plaine Marcreux Pressensé,93300,0.0
+Robespierre,93300,0.0
+Sadi Carnot,93300,0.0
+Vallès La Frette,93300,0.0
+Villette Quatre Chemin,93300,0.0
+Anatole France,93310,0.0
+Arpents,93310,0.0
+Belvedere,93310,0.0
+Centre,93310,0.0
+Gabriel Peri,93310,0.0
+Severine,93310,0.0
+Stalingrad,93310,0.0
+Butte Pinson,93380,0.0
+Centre Ville,93380,0.0
+Gare,93380,0.0
+Joncherolles-Fauvettes,93380,0.0
+Maroc,93380,0.0
+Nord,93380,0.0
+Potier,93380,0.0
+Sud,93380,0.0
+Debain-Michelet-Bauer,93400,0.0
+Dock Saint Ouen,93400,0.383568164435404
+Garibaldi-Ottino-Porte de Saint Ouen,93400,0.059392876661661924
+Hugo-Payret-Zola,93400,0.0
+Marie-Godillot-Landy,93400,0.08012100558146373
+Rosiers-Les Puces,93400,0.0
+Vieux Saint Ouen,93400,0.0738180866233314
+Bernard Lama,93430,0.0
+Jules Ferry,93430,0.0
+Marcel Sembat,93430,0.0
+Maurice Grandcoing,93430,0.0
+Paul Langevin,93430,0.0
+Centre,93450,0.7372964916996599
+Nord,93450,0.7432247466459517
+Sud,93450,0.9247521776508344
+Courtillères,93500,0.0
+Haut Pantin-Charles Auray,93500,0.0
+Mairie-Ourcq,93500,0.0
+Ourcq-Hoche,93500,0.0
+Petit Pantin-Haut Pantin,93500,0.0
+Quatre Chemins-Diderot,93500,0.0
+Quatre Chemins-Jaurès,93500,0.0
+Église-Sept Arpents,93500,0.0
+Blumenthal-La Biche,93800,0.385365780252761
+Félix Merlin,93800,0.10673596011036643
+Gallieni-De Lattre de Tassigny,93800,0.0
+Les Mobiles-Maison de Santé,93800,0.10388595960363682
+Ormesson-Jean Jaurès,93800,0.0
+Saint Leu-Commandant Louis Bouchet,93800,0.15419152224472296
